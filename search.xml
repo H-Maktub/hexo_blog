@@ -1,0 +1,1101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>openwrt之shadowsock做PAC代理</title>
+    <url>/pages/23da3085/</url>
+    <content><![CDATA[<h2 id="安装配置shadowsocks-ChinaDNS-dns-forwarder"><a href="#安装配置shadowsocks-ChinaDNS-dns-forwarder" class="headerlink" title="安装配置shadowsocks+ChinaDNS+dns-forwarder"></a>安装配置<code>shadowsocks</code>+<code>ChinaDNS</code>+<code>dns-forwarder</code></h2><h3 id="添加软件源"><a href="#添加软件源" class="headerlink" title="添加软件源"></a>添加软件源</h3><ol>
+<li>添加证书<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget http://openwrt-dist.sourceforge.net/openwrt-dist.pub</span><br><span class="line">opkg-key add openwrt-dist.pub</span><br></pre></td></tr></table></figure></li>
+<li>编辑<code>/etc/opkg/customfeeds.conf</code>,添加软件源<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">src/gz openwrt_dist http://openwrt-dist.sourceforge.net/packages/base/x86_64</span><br><span class="line">src/gz openwrt_dist_luci http://openwrt-dist.sourceforge.net/packages/luci</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="在线安装"><a href="#在线安装" class="headerlink" title="在线安装"></a>在线安装</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">opkg update</span><br><span class="line">opkg install ChinaDNS</span><br><span class="line">opkg install luci-app-chinadns</span><br><span class="line">opkg install dns-forwarder</span><br><span class="line">opkg install luci-app-dns-forwarder</span><br><span class="line">opkg install shadowsocks-libev</span><br><span class="line">opkg install luci-app-shadowsocks</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h3 id="离线安装"><a href="#离线安装" class="headerlink" title="离线安装"></a>离线安装</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">opkg update</span><br><span class="line">wget http://openwrt-dist.sourceforge.net/packages/base/x86_64/ChinaDNS_1.3.3-1_x86_64.ipk</span><br><span class="line">opkg install ChinaDNS_1.3.3-1_x86_64.ipk </span><br><span class="line">wget http://openwrt-dist.sourceforge.net/packages/base/x86_64/dns-forwarder_1.2.1-2_x86_64.ipk</span><br><span class="line">opkg install dns-forwarder_1.2.1-2_x86_64.ipk</span><br><span class="line">wget http://openwrt-dist.sourceforge.net/packages/base/x86_64/shadowsocks-libev_3.3.4-1_x86_64.ipk</span><br><span class="line">opkg install shadowsocks-libev_3.3.4-1_x86_64.ipk</span><br><span class="line">opkg install luci-app-chinadns</span><br><span class="line">opkg install luci-app-dns-forwarder</span><br><span class="line">opkg install luci-app-shadowsocks</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置shadowsocks"><a href="#配置shadowsocks" class="headerlink" title="配置shadowsocks"></a>配置<code>shadowsocks</code></h3><h4 id="添加服务器"><a href="#添加服务器" class="headerlink" title="添加服务器"></a>添加服务器</h4><p><img src="/pages/23da3085/00.png"></p>
+<h4 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h4><p><img src="/pages/23da3085/01.png"> </p>
+<h4 id="访问控制"><a href="#访问控制" class="headerlink" title="访问控制"></a>访问控制</h4><p><img src="/pages/23da3085/02.png"></p>
+<h3 id="配置ChinaDNS"><a href="#配置ChinaDNS" class="headerlink" title="配置ChinaDNS"></a>配置<code>ChinaDNS</code></h3><p><img src="/pages/23da3085/03.png"></p>
+<h3 id="配置dns-forwarder"><a href="#配置dns-forwarder" class="headerlink" title="配置dns-forwarder"></a>配置<code>dns-forwarder</code></h3><p><img src="/pages/23da3085/04.png"></p>
+<h2 id="安装配置HTTP代理privoxy-可选"><a href="#安装配置HTTP代理privoxy-可选" class="headerlink" title="安装配置HTTP代理privoxy(可选)"></a>安装配置HTTP代理<code>privoxy</code>(可选)</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">opkg install privoxy </span><br><span class="line">opkg install luci-app-privoxy </span><br><span class="line">opkg install luci-i18n-privoxy-zh-cn</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-方式一（注意先，先配置好再启动）"><a href="#配置-方式一（注意先，先配置好再启动）" class="headerlink" title="配置 方式一（注意先，先配置好再启动）"></a>配置 方式一<code>（注意先，先配置好再启动）</code></h3><p><img src="/pages/23da3085/05.png"><br><img src="/pages/23da3085/06.png"></p>
+<h3 id="配置-方式二"><a href="#配置-方式二" class="headerlink" title="配置 方式二"></a>配置 方式二</h3><h4 id="编辑-etc-config-privoxy"><a href="#编辑-etc-config-privoxy" class="headerlink" title="编辑/etc/config/privoxy"></a>编辑<code>/etc/config/privoxy</code></h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">config privoxy &#x27;privoxy&#x27;</span><br><span class="line">        option confdir &#x27;/etc/privoxy&#x27;</span><br><span class="line">        option logdir &#x27;/var/log&#x27;</span><br><span class="line">        option logfile &#x27;privoxy.log&#x27;</span><br><span class="line">        list filterfile &#x27;default.filter&#x27;</span><br><span class="line">        list actionsfile &#x27;match-all.action&#x27;</span><br><span class="line">        list actionsfile &#x27;default.action&#x27;</span><br><span class="line">        list listen_address &#x27;0.0.0.0:8118&#x27;</span><br><span class="line">        option toggle &#x27;1&#x27;</span><br><span class="line">        option enable_remote_toggle &#x27;1&#x27;</span><br><span class="line">        option enable_edit_actions &#x27;1&#x27;</span><br><span class="line">        option forwarded_connect_retries &#x27;0&#x27;</span><br><span class="line">        option keep_alive_timeout &#x27;300&#x27;</span><br><span class="line">        option debug_512 &#x27;1&#x27;</span><br><span class="line">        option debug_4096 &#x27;1&#x27;</span><br><span class="line">        option debug_8192 &#x27;1&#x27;</span><br><span class="line">        list forward_socks5 &#x27;/ 127.0.0.1:1080    .&#x27;</span><br><span class="line">        list forward &#x27;192.168.*.*/      .&#x27;</span><br><span class="line">        list forward &#x27;127.*.*.*/        .&#x27;</span><br><span class="line">        list forward &#x27;10.*.*.*/ .&#x27;</span><br><span class="line">        list forward &#x27;localhost/ .&#x27;</span><br><span class="line"></span><br><span class="line">config system &#x27;system&#x27;</span><br><span class="line">        option boot_delay &#x27;5&#x27;</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置PAC文件"><a href="#配置PAC文件" class="headerlink" title="配置PAC文件"></a>配置<code>PAC</code>文件</h2><h3 id="安装pip"><a href="#安装pip" class="headerlink" title="安装pip"></a>安装<code>pip</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">opkg install python3-pip</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装genpac"><a href="#安装genpac" class="headerlink" title="安装genpac"></a>安装<code>genpac</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install genpac</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成SOCKS5代理方式"><a href="#生成SOCKS5代理方式" class="headerlink" title="生成SOCKS5代理方式"></a>生成<code>SOCKS5</code>代理方式</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">genpac --proxy=&quot;SOCKS5 192.168.3.2:1080&quot; --gfwlist-proxy=&quot;SOCKS5 192.168.3.2:1080&quot; -o /www/gfwlist.pac</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成HTTP代理方式"><a href="#生成HTTP代理方式" class="headerlink" title="生成HTTP代理方式"></a>生成<code>HTTP</code>代理方式</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">genpac --proxy=&quot;SOCKS5 192.168.3.2:1080&quot; --gfwlist-proxy=&quot;PROXY 192.168.3.2:8118&quot; -o /www/gfwlist.pac</span><br></pre></td></tr></table></figure>
+
+<h2 id="自动更新配置"><a href="#自动更新配置" class="headerlink" title="自动更新配置"></a>自动更新配置</h2><h3 id="新建脚本"><a href="#新建脚本" class="headerlink" title="新建脚本"></a>新建脚本</h3><ul>
+<li><p><code>/etc/script/gen_pac.sh</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/bin/genpac --proxy=&quot;SOCKS5 192.168.3.2:1080&quot; --gfwlist-proxy=&quot;SOCKS5 192.168.3.2:1080&quot; -o /www/gfwlist.pac</span><br></pre></td></tr></table></figure></li>
+<li><p><code>/etc/script/gen_chnroute.sh</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/bin/wget -O- &#x27;http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest&#x27; | awk -F\| &#x27;/CN\|ipv4/ &#123; printf(&quot;%s/%d\n&quot;, $4, 32-log($5)/log(2)) &#125;&#x27; &gt; /etc/chinadns_chnroute.txt</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="更改权限"><a href="#更改权限" class="headerlink" title="更改权限"></a>更改权限</h3><p><code>系统</code> &gt;&gt; <code>计划任务</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chmod +x /etc/script/gen_pac.sh</span><br><span class="line">chmod +x /etc/script/gen_chnroute.sh</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加定时任务"><a href="#添加定时任务" class="headerlink" title="添加定时任务"></a>添加定时任务</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">14  4  8  *  *  sh /etc/script/gen_chnroute.sh </span><br><span class="line">14  4  8  *  *  sh /etc/script/gen_pac.sh </span><br></pre></td></tr></table></figure>
+<p><img src="/pages/23da3085/07.png"></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="macos系统"><a href="#macos系统" class="headerlink" title="macos系统"></a>macos系统</h3><p><img src="/pages/23da3085/08.png"></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://openwrt-dist.sourceforge.net/">openwrt shadowsock 教程</a></li>
+<li><a href="https://github.com/JinnLynn/genpac">genpac</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>openwrt</tag>
+        <tag>shadowsock</tag>
+        <tag>privoxy</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>openwrt之zerotier异地组网</title>
+    <url>/pages/98f6a1d6/</url>
+    <content><![CDATA[<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">opkg install zerotier</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置zerotier"><a href="#配置zerotier" class="headerlink" title="配置zerotier"></a>配置<code>zerotier</code></h2><h3 id="编辑-etc-config-zerotier"><a href="#编辑-etc-config-zerotier" class="headerlink" title="编辑/etc/config/zerotier"></a>编辑<code>/etc/config/zerotier</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">config zerotier sample_config</span><br><span class="line">        option enabled 1</span><br><span class="line">        option config_path &#x27;/etc/zerotier&#x27;</span><br><span class="line">        option secret &#x27;&#x27;</span><br><span class="line">        list join &#x27;填入自己网络id&#x27; </span><br></pre></td></tr></table></figure>
+
+<h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mkdir /etc/zerotier</span><br><span class="line">/etc/init.d/zerotier start</span><br></pre></td></tr></table></figure>
+
+<h3 id="开机启动"><a href="#开机启动" class="headerlink" title="开机启动"></a>开机启动</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/etc/init.d/zerotier enable</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h3 id="openwrt添加网络接口"><a href="#openwrt添加网络接口" class="headerlink" title="openwrt添加网络接口"></a>openwrt添加网络接口</h3><p><img src="/pages/98f6a1d6/00.png"><br><img src="/pages/98f6a1d6/01.png"></p>
+<h3 id="配置zerotier-1"><a href="#配置zerotier-1" class="headerlink" title="配置zerotier"></a>配置zerotier</h3><ol>
+<li>登陆zerotier，配置ip<br><img src="/pages/98f6a1d6/02.png"></li>
+<li>配置zerotier路由(本人用的是192.168.9.100，请自行更改ip)<br><img src="/pages/98f6a1d6/03.png"></li>
+</ol>
+<h3 id="配置openwrt防火墙"><a href="#配置openwrt防火墙" class="headerlink" title="配置openwrt防火墙"></a>配置openwrt防火墙</h3><ol>
+<li>添加基本防火墙设置<br><img src="/pages/98f6a1d6/04.png"></li>
+<li>添加自定义规则<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">iptables -I FORWARD -i ztr2qvners -j ACCEPT</span><br><span class="line">iptables -I FORWARD -o ztr2qvners -j ACCEPT</span><br><span class="line">iptables -t nat -I POSTROUTING -o ztr2qvners -j MASQUERADE</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><blockquote>
+<p>配置完成后，可以用zerotier客户端连接家里的网络，但是网段不能和家里的网段一样，会冲突。</p>
+</blockquote>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="https://www.zerotier.com/">Zerotier官网</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>openwrt</tag>
+        <tag>zerotier</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>openwrt之安装配置</title>
+    <url>/pages/bc25ad93/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>MACOS 10.15</li>
+<li>ESXI 6.7</li>
+</ul>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="镜像文件转换"><a href="#镜像文件转换" class="headerlink" title="镜像文件转换"></a>镜像文件转换</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">brew install qemu</span><br><span class="line">qemu-img convert -f raw -O vmdk ~/Downloads/openwrt-19.07.0-x86-64-combined-ext4.img openwrt-19.07.0-x86-64-combined-ext4.vmdk</span><br></pre></td></tr></table></figure>
+
+<h3 id="Esxi镜像转换"><a href="#Esxi镜像转换" class="headerlink" title="Esxi镜像转换"></a>Esxi镜像转换</h3><ol>
+<li>上传文件<br><img src="/pages/bc25ad93/00.png"></li>
+<li>转换<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vmkfstools -i openwrt-19.07.0-x86-64-combined-ext4.vmdk openwrt.vmdk -d thin</span><br></pre></td></tr></table></figure>
+<span id="more"></span></li>
+</ol>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="创建虚拟机"><a href="#创建虚拟机" class="headerlink" title="创建虚拟机"></a>创建虚拟机</h3><p><img src="/pages/bc25ad93/01.png"><br><img src="/pages/bc25ad93/02.png"><br><img src="/pages/bc25ad93/03.png"><br><img src="/pages/bc25ad93/04.png"><br><img src="/pages/bc25ad93/05.png"><br><img src="/pages/bc25ad93/06.png"></p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="作为旁路由设置IP"><a href="#作为旁路由设置IP" class="headerlink" title="作为旁路由设置IP"></a>作为旁路由设置IP</h3><ul>
+<li><p>修改<code>/etc/config/network</code><br><img src="/pages/bc25ad93/07.png"></p>
+</li>
+<li><p>重启网络</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/etc/init.d/network reload</span><br></pre></td></tr></table></figure></li>
+<li><p>登陆系统后配置网络<br><img src="/pages/bc25ad93/08.png"></p>
+</li>
+<li><p>如果作为旁路由，请关闭DHCP</p>
+</li>
+<li><p><img src="/pages/bc25ad93/09.png"></p>
+</li>
+</ul>
+<h3 id="更新软件包列表"><a href="#更新软件包列表" class="headerlink" title="更新软件包列表"></a>更新软件包列表</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">opkg update</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装中文包"><a href="#安装中文包" class="headerlink" title="安装中文包"></a>安装中文包</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">opkg install luci-i18n-base-zh-cn</span><br><span class="line">opkg install luci-i18n-firewall-zh-cn</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="https://openwrt.org/docs/guide-user/virtualization/vmware">OpenWrt on VMware HowTo</a></li>
+<li><a href="https://downloads.openwrt.org/releases/19.07.0/targets/x86/64/">Image Files</a></li>
+<li><a href="https://openwrt.org/zh-cn/doc/uci/network">网络设置</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>openwrt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>openwrt之shadowsock服务器搭建</title>
+    <url>/pages/64803281/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>debian10</li>
+<li>shadowsocks-libev</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="官方源安装"><a href="#官方源安装" class="headerlink" title="官方源安装"></a>官方源安装</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install shadowsocks-libev</span><br></pre></td></tr></table></figure>
+
+<h3 id="官方源最新版本安装"><a href="#官方源最新版本安装" class="headerlink" title="官方源最新版本安装"></a>官方源最新版本安装</h3><ul>
+<li>添加软件源，编辑<code>/etc/apt/sources.list</code>，添加：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">deb http://deb.debian.org/debian buster-backports main</span><br></pre></td></tr></table></figure></li>
+<li>安装<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt-get -t buster-backports install &quot;shadowsocks-libev&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><ul>
+<li><p>编辑配置文件<code> /etc/shadowsocks-libev/ssconfig.json</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;server&quot;:[&quot;::1&quot;, &quot;0.0.0.0&quot;],</span><br><span class="line">    &quot;mode&quot;:&quot;tcp_and_udp&quot;,</span><br><span class="line">    &quot;port_password&quot;: &#123;</span><br><span class="line">        &quot;port1&quot;: &quot;password1&quot;,</span><br><span class="line">        &quot;port2&quot;: &quot;password2&quot;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;timeout&quot;:60,</span><br><span class="line">    &quot;method&quot;:&quot;chacha20-ietf-poly1305&quot;,</span><br><span class="line">    &quot;fast_open&quot;:true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span id="more"></span></li>
+<li><p>创建系统服务<code>/etc/systemd/system/ssmanager.service</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks Manager Server</span><br><span class="line">After=network.target</span><br><span class="line">[Service]</span><br><span class="line">User=root</span><br><span class="line">Group=root</span><br><span class="line">KillMode=mixed</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=/usr/bin/ss-manager --manager-address /var/run/shadowsocks-manager.sock -c /etc/shadowsocks-libev/ssconfig.json</span><br><span class="line">ExecReload=/bin/kill -s HUP $MAINPID</span><br><span class="line">ExecStop=/bin/kill -s QUIT $MAINPID</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></li>
+<li><p>开启服务</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start ssmanager</span><br><span class="line">systemctl enable ssmanager</span><br></pre></td></tr></table></figure>
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2></li>
+<li><p>开启BBR</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo &quot;tcp_bbr&quot; | sudo tee --append /etc/modules-load.d/modules.conf</span><br></pre></td></tr></table></figure></li>
+<li><p>优化内核，编辑<code>/etc/sysctl.conf</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">fs.file-max = 51200</span><br><span class="line">net.core.rmem_max = 67108864</span><br><span class="line">net.core.wmem_max = 67108864</span><br><span class="line">net.core.netdev_max_backlog = 250000</span><br><span class="line">net.core.somaxconn = 4096</span><br><span class="line">net.ipv4.tcp_syncookies = 1</span><br><span class="line">net.ipv4.tcp_tw_reuse = 1</span><br><span class="line">net.ipv4.tcp_tw_recycle = 0</span><br><span class="line">net.ipv4.tcp_fin_timeout = 30</span><br><span class="line">net.ipv4.tcp_keepalive_time = 1200</span><br><span class="line">net.ipv4.ip_local_port_range = 10000 65000</span><br><span class="line">net.ipv4.tcp_max_syn_backlog = 8192</span><br><span class="line">net.ipv4.tcp_max_tw_buckets = 5000</span><br><span class="line">net.ipv4.tcp_fastopen = 3</span><br><span class="line">net.ipv4.tcp_mem = 25600 51200 102400</span><br><span class="line">net.ipv4.tcp_rmem = 4096 87380 67108864</span><br><span class="line">net.ipv4.tcp_wmem = 4096 65536 67108864</span><br><span class="line">net.ipv4.tcp_mtu_probing = 1</span><br><span class="line">net.core.default_qdisc=fq</span><br><span class="line">net.ipv4.tcp_congestion_control=bbr</span><br></pre></td></tr></table></figure></li>
+<li><p>重启电脑后，检查是否开启bbr</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">## 第一项检查：</span><br><span class="line">sysctl net.ipv4.tcp_available_congestion_control | grep bbr</span><br><span class="line">## 若已开启bbr，结果通常为以下两种：</span><br><span class="line">net.ipv4.tcp_available_congestion_control = bbr cubic reno</span><br><span class="line">net.ipv4.tcp_available_congestion_control = reno cubic bbr</span><br><span class="line">## 第二项检查：</span><br><span class="line">sysctl net.ipv4.tcp_congestion_control | grep bbr</span><br><span class="line">## 若已开启bbr，结果如下：</span><br><span class="line">net.ipv4.tcp_congestion_control = bbr</span><br><span class="line">## 第三项检查：</span><br><span class="line">sysctl net.core.default_qdisc | grep fq</span><br><span class="line">## 若已开启bbr，结果如下：</span><br><span class="line">net.core.default_qdisc = fq</span><br><span class="line">## 第四项检查：</span><br><span class="line">lsmod | grep bbr</span><br><span class="line">## 若已开启bbr，结果可能如下。并不是所有的 VPS 都会有此返回值，若没有也属正常。</span><br><span class="line">tcp_bbr 20480 2</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="https://github.com/shadowsocks/shadowsocks-libev">shadowsocks-libev</a></li>
+</ul>
+<h2 id="快速搭建"><a href="#快速搭建" class="headerlink" title="快速搭建"></a>快速搭建</h2><ul>
+<li><a href="https://getoutline.org/">outline</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>shadowsock</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Esxi之kvm安装黑苹果</title>
+    <url>/pages/e20e97af/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>debian server(无桌面)</li>
+<li>kvm虚拟机</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="安装黑苹果"><a href="#安装黑苹果" class="headerlink" title="安装黑苹果"></a>安装黑苹果</h3><ul>
+<li><p>安装依赖</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get install qemu-system qemu-utils python3 python3-pip</span><br></pre></td></tr></table></figure></li>
+<li><p>下载git仓库<code>macOS-Simple-KVM</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/foxlet/macOS-Simple-KVM.git</span><br></pre></td></tr></table></figure></li>
+<li><p>初始化镜像和初始化kvm硬盘(建议至少120G以上)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd macOS-Simple-KVM</span><br><span class="line">#可能会失败，重复到成功</span><br><span class="line">./jumpstart.sh</span><br><span class="line">qemu-img create -f qcow2 MyDisk.qcow2 120G</span><br></pre></td></tr></table></figure></li>
+<li><p>启动黑苹果</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">HEADLESS=1 MEM=8G CPUS=4 SYSTEM_DISK=MyDisk.qcow2 ./headless.sh</span><br></pre></td></tr></table></figure></li>
+<li><p>使用VNC软件连接debian服务器</p>
+</li>
+<li><p>安装黑苹果</p>
+<blockquote>
+<p>先初始化硬盘，后安装镜像，初始化安装可能会失败，重复到可以为止</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="桥接网络"><a href="#桥接网络" class="headerlink" title="桥接网络"></a>桥接网络</h3><ul>
+<li>安装依赖<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt install bridge-utils</span><br><span class="line">apt install uml-utilities</span><br><span class="line">apt install net-tools</span><br></pre></td></tr></table></figure></li>
+</ul>
+<span id="more"></span>
+
+<ul>
+<li><p>编辑启动脚本<code>macos.sh</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#启动桥接网卡,ens192为物理网卡，请自行修改</span><br><span class="line">brctl addbr br0</span><br><span class="line">ip addr flush dev ens192</span><br><span class="line">brctl addif br0 ens192</span><br><span class="line">tunctl -t tap0 -u root</span><br><span class="line">brctl addif br0 tap0</span><br><span class="line">ifconfig ens192 up</span><br><span class="line">ifconfig tap0 up</span><br><span class="line">ifconfig br0 up</span><br><span class="line">#dhclient -v br0</span><br><span class="line">ifconfig br0 192.168.3.28 netmask 255.255.255.0</span><br><span class="line">route add default gw 192.168.3.1</span><br><span class="line"></span><br><span class="line">#启动黑苹果</span><br><span class="line">cd /root/macOS-Simple-KVM</span><br><span class="line">sh startmacos.sh </span><br></pre></td></tr></table></figure></li>
+<li><p>复制<code>headless.sh</code>文件为<code>startmacos.sh</code>,并修改相关参数，以下为个人修改参考</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">OSK=&quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot;</span><br><span class="line">VMDIR=$PWD</span><br><span class="line">OVMF=$VMDIR/firmware</span><br><span class="line"></span><br><span class="line">qemu-system-x86_64 \</span><br><span class="line">    -enable-kvm \</span><br><span class="line">    -m 12G \</span><br><span class="line">    -machine q35,accel=kvm \</span><br><span class="line">    -smp 4,cores=4  \</span><br><span class="line">    -cpu Penryn,vendor=GenuineIntel,kvm=on,+sse3,+sse4.2,+aes,+xsave,+avx,+xsaveopt,+xsavec,+xgetbv1,+avx2,+bmi2,+smep,+bmi1,+fma,+movbe,+invtsc \</span><br><span class="line">    -device isa-applesmc,osk=&quot;$OSK&quot; \</span><br><span class="line">    -smbios type=2 \</span><br><span class="line">    -drive if=pflash,format=raw,readonly,file=&quot;$OVMF/OVMF_CODE.fd&quot; \</span><br><span class="line">    -drive if=pflash,format=raw,file=&quot;$OVMF/OVMF_VARS-1024x768.fd&quot; \</span><br><span class="line">    -vga qxl \</span><br><span class="line">    -usb -device usb-kbd -device usb-tablet \</span><br><span class="line">    -netdev tap,id=net0,ifname=tap0,script=no,downscript=no \</span><br><span class="line">    -device vmxnet3,netdev=net0,id=net0,mac=52:54:00:0e:0d:20 \</span><br><span class="line">    -device ich9-ahci,id=sata \</span><br><span class="line">    -drive id=ESP,if=none,format=qcow2,file=ESP.qcow2 \</span><br><span class="line">    -device ide-hd,bus=sata.2,drive=ESP \</span><br><span class="line">    -drive id=InstallMedia,format=raw,if=none,file=BaseSystem.img \</span><br><span class="line">    -device ide-hd,bus=sata.3,drive=InstallMedia \</span><br><span class="line">    -drive id=SystemDisk,if=none,file=MyDisk.qcow2 \</span><br><span class="line">    -device ide-hd,bus=sata.4,drive=SystemDisk \</span><br><span class="line">    -nographic -vnc :0 -k en-us</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="开机启动"><a href="#开机启动" class="headerlink" title="开机启动"></a>开机启动</h2><ul>
+<li><p>创建服务，创建文件<code>/lib/systemd/system/macos.service</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=macos</span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=/usr/bin/sh /root/macos.sh</span><br><span class="line">User=root</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></li>
+<li><p>开机启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl enable macos</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="https://github.com/foxlet/macOS-Simple-KVM">macOS-Simple-KVM</a></li>
+<li><a href="https://gist.github.com/extremecoders-re/e8fd8a67a515fee0c873dcafc81d811c">qemu-networking</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>esxi</tag>
+        <tag>kvm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Esxi之kvm-opencore-bigsur黑苹果</title>
+    <url>/pages/e72f4f4c/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>debian server(无桌面)</li>
+<li>kvm虚拟机</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="开启虚拟机的虚拟化"><a href="#开启虚拟机的虚拟化" class="headerlink" title="开启虚拟机的虚拟化"></a>开启虚拟机的虚拟化</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo 1 | sudo tee /sys/module/kvm/parameters/ignore_msrs</span><br><span class="line">sudo cp kvm.conf /etc/modprobe.d/kvm.conf  ## for intel boxes</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装软件"><a href="#安装软件" class="headerlink" title="安装软件"></a>安装软件</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt-get install qemu uml-utilities virt-manager git wget libguestfs-tools p7zip-full -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/kholia/OSX-KVM.git</span><br><span class="line">cd OSX-KVM</span><br><span class="line">./fetch-macOS-v2.py</span><br><span class="line">qemu-img convert BaseSystem.dmg -O raw BaseSystem.img</span><br><span class="line">qemu-img create -f qcow2 mac_hdd_ng.img 256G</span><br></pre></td></tr></table></figure>
+
+<h3 id="无界面启动安装"><a href="#无界面启动安装" class="headerlink" title="无界面启动安装"></a>无界面启动安装</h3><p>修改<code>OpenCore-Boot.sh</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">#安装完毕后屏蔽启动盘</span><br><span class="line">-device ide-hd,bus=sata.3,drive=InstallMedia</span><br><span class="line">-drive id=InstallMedia,if=none,file=&quot;$REPO_PATH/BaseSystem.img&quot;,format=raw</span><br><span class="line"></span><br><span class="line">#网络桥接或虚拟网络选择</span><br><span class="line">-netdev tap,id=net0,ifname=tap0,script=no,downscript=no -device vmxnet3,netdev=net0,id=net0,mac=52:54:00:c9:18:27</span><br><span class="line">#-netdev user,id=net0 -device vmxnet3,netdev=net0,id=net0,mac=52:54:00:c9:18:27</span><br><span class="line"></span><br><span class="line">#屏蔽，不然启动不了</span><br><span class="line">## -monitor stdio</span><br><span class="line">  </span><br><span class="line">#先使用-vga qxl进行安装</span><br><span class="line">-device VGA,vgamem_mb=128</span><br><span class="line">#-vga qxl</span><br><span class="line"></span><br><span class="line">#安装完毕后关闭vnc</span><br><span class="line">-nographic</span><br><span class="line">#-nographic -vnc :0 -k en-us</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h2 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h2><h3 id="操作参考下文"><a href="#操作参考下文" class="headerlink" title="操作参考下文"></a>操作参考下文</h3><p><a href="https://blog.maktub.cn/2020/06/10/Esxi%E4%B9%8Bkvm%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/">Esxi之kvm安装黑苹果</a></p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><ul>
+<li><a href="https://github.com/kholia/OSX-KVM.git">OSX-KVM</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>esxi</tag>
+        <tag>kvm</tag>
+        <tag>big sur</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nftables端口转发</title>
+    <url>/pages/f4ac01ca/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>debian 11</li>
+</ul>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="编辑-etc-sysctl-conf"><a href="#编辑-etc-sysctl-conf" class="headerlink" title="编辑/etc/sysctl.conf"></a>编辑<code>/etc/sysctl.conf</code></h3><blockquote>
+<p>允许端口转发</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#文件末尾添加</span><br><span class="line">net.ipv4.ip_forward=1</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建文件-etc-nftables-example-nft"><a href="#创建文件-etc-nftables-example-nft" class="headerlink" title="创建文件/etc/nftables/example.nft"></a>创建文件<code>/etc/nftables/example.nft</code></h3><blockquote>
+<p>配置文件必须在<code>/etc/nftables/</code>目录下</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/usr/sbin/nft -f</span><br><span class="line"></span><br><span class="line">define localIP = 本地ip</span><br><span class="line">define remoteIP = 远程ip</span><br><span class="line">define remotePort = 端口(80)/端口范围(80-89)</span><br><span class="line">define localPort = 端口(80)/端口范围(80-89)</span><br><span class="line"># Flush the rule set</span><br><span class="line">#flush ruleset</span><br><span class="line"></span><br><span class="line">add table ip nat</span><br><span class="line">add chain nat PREROUTING &#123; type nat hook prerouting priority -100 ; &#125;</span><br><span class="line">add chain nat POSTROUTING &#123; type nat hook postrouting priority 100 ; &#125;</span><br><span class="line">add rule ip nat PREROUTING tcp dport $localPort counter dnat to $remoteIP:$remotePort</span><br><span class="line">add rule ip nat PREROUTING udp dport $localPort counter dnat to $remoteIP:$remotePort</span><br><span class="line">add rule ip nat POSTROUTING ip daddr $remoteIP tcp dport $remotePort counter snat to $localIP</span><br><span class="line">add rule ip nat POSTROUTING ip daddr $remoteIP udp dport $remotePort counter snat to $localIP</span><br></pre></td></tr></table></figure>
+
+<h3 id="编辑-etc-nftables-conf"><a href="#编辑-etc-nftables-conf" class="headerlink" title="编辑/etc/nftables.conf"></a>编辑<code>/etc/nftables.conf</code></h3><blockquote>
+<p>加载自定义配置文件</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//默认配置内容</span><br><span class="line">#!/usr/sbin/nft -f</span><br><span class="line"></span><br><span class="line">flush ruleset</span><br><span class="line"></span><br><span class="line">table inet filter &#123;</span><br><span class="line">        chain input &#123;</span><br><span class="line">                type filter hook input priority 0;</span><br><span class="line">        &#125;</span><br><span class="line">        chain forward &#123;</span><br><span class="line">                type filter hook forward priority 0;</span><br><span class="line">        &#125;</span><br><span class="line">        chain output &#123;</span><br><span class="line">                type filter hook output priority 0;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#文件末尾添加</span><br><span class="line">include &quot;/etc/nftables/tranfrom.nft&quot;</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+<h3 id="设置开机启动"><a href="#设置开机启动" class="headerlink" title="设置开机启动"></a>设置开机启动</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//开机启动</span><br><span class="line">systemctl enable nftables.service</span><br><span class="line"></span><br><span class="line">//马上启动</span><br><span class="line">systemctl start nftables.service</span><br><span class="line"></span><br><span class="line">//查看状态</span><br><span class="line">systemctl status nftables.service</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="https://www.arloor.com/posts/centos8-nftables-nat/">nftables设置nat转发(基于centos8)</a></li>
+<li><a href="https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/8/html/configuring_and_managing_networking/getting-started-with-nftables_configuring-and-managing-networking">RedHat帮助文档</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>nftables</tag>
+        <tag>vps</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PVE-RouterOS系统搭建与配置</title>
+    <url>/pages/bdd8b581/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Proxmox 7</li>
+<li>RouterOS 6</li>
+</ul>
+<h2 id="PVE安装RouterOS"><a href="#PVE安装RouterOS" class="headerlink" title="PVE安装RouterOS"></a>PVE安装RouterOS</h2><h3 id="新建虚拟机"><a href="#新建虚拟机" class="headerlink" title="新建虚拟机"></a>新建虚拟机</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">常规-&gt;名称-&gt;RouterOS</span><br><span class="line">操作系统-&gt;客户机操作类型-&gt;类别-&gt;Linux</span><br><span class="line">操作系统-&gt;客户机操作类型-&gt;版本-&gt;5.x-2.6 kernel</span><br><span class="line">操作系统-&gt;不适用任何介质</span><br><span class="line">系统-&gt;无需修改</span><br><span class="line">系统-&gt;机型-&gt;q35</span><br><span class="line">磁盘-&gt;删除所有磁盘</span><br><span class="line">CPU-&gt;核心-&gt;4</span><br><span class="line">CPU-&gt;类别-&gt;host</span><br><span class="line">CPU-&gt;CPU权重-&gt;2048</span><br><span class="line">内存-&gt;内存-&gt;2048</span><br><span class="line">网络-&gt;模型-&gt;VirtIO(半虚拟化)</span><br><span class="line">网络-&gt;防火墙-&gt;关</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载和导入磁盘"><a href="#下载和导入磁盘" class="headerlink" title="下载和导入磁盘"></a>下载和导入磁盘</h3><ol>
+<li><p>下载<a href="https://mikrotik.com/download">RouterOS</a>云镜像的img镜像，并上传到PVE</p>
+</li>
+<li><p>导入磁盘到虚拟机</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 104为虚拟机id</span><br><span class="line">qm importdisk 104 /var/lib/vz/template/iso/routeros.img local-lvm</span><br></pre></td></tr></table></figure></li>
+<li><p>虚拟机-&gt;硬件-&gt;双击磁盘添加</p>
+</li>
+<li><p>虚拟机-&gt;选项-&gt;引导顺序-&gt;选中硬盘</p>
+</li>
+<li><p>添加其他pcie设备,并选中PCI-Express</p>
+</li>
+<li><p>启动虚拟机</p>
+<span id="more"></span></li>
+</ol>
+<h2 id="RouterOS配置"><a href="#RouterOS配置" class="headerlink" title="RouterOS配置"></a>RouterOS配置</h2><h3 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h3><ol>
+<li><p>配置一个静态ip，登录web</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ip address add address=192.168.3.180 interface=ether1</span><br></pre></td></tr></table></figure></li>
+<li><p>配置Interfaces</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Interfaces-&gt;Interface List-&gt;List-Add New-&gt;Namn-&gt;LAN/WAN</span><br><span class="line">Bridge-&gt;Bridge-&gt;Add New-&gt;Name-bridge</span><br><span class="line">Bridge-&gt;Ports-&gt;Add New-&gt;Interface-&gt;LAN</span><br><span class="line">IP-&gt;DHCP-&gt;DHCP Setup</span><br></pre></td></tr></table></figure></li>
+<li><p>导入默认防火墙配置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">/ip firewall filter</span><br><span class="line">add action=accept chain=input comment=&quot;defconf: accept established,related,untracked&quot; connection-state=established,related,untracked</span><br><span class="line">add action=drop chain=input comment=&quot;defconf: drop invalid&quot; connection-state=invalid</span><br><span class="line">add action=accept chain=input comment=&quot;defconf: accept ICMP&quot; protocol=icmp</span><br><span class="line">add action=accept chain=input comment=&quot;defconf: accept to local loopback (for CAPsMAN)&quot; dst-address=127.0.0.1</span><br><span class="line">add action=drop chain=input comment=&quot;defconf: drop all not coming from LAN&quot; in-interface-list=!LAN</span><br><span class="line">add action=accept chain=forward comment=&quot;defconf: accept in ipsec policy&quot; ipsec-policy=in,ipsec</span><br><span class="line">add action=accept chain=forward comment=&quot;defconf: accept out ipsec policy&quot; ipsec-policy=out,ipsec</span><br><span class="line">add action=fasttrack-connection chain=forward comment=&quot;defconf: fasttrack&quot; connection-state=established,related</span><br><span class="line">add action=accept chain=forward comment=&quot;defconf: accept established,related, untracked&quot; connection-state=established,related,untracked</span><br><span class="line">add action=drop chain=forward comment=&quot;defconf: drop invalid&quot; connection-state=invalid</span><br><span class="line">add action=drop chain=forward comment=&quot;defconf: drop all from WAN not DSTNATed&quot; connection-nat-state=!dstnat connection-state=new in-interface-list=WAN</span><br><span class="line">#</span><br><span class="line">/ip firewall nat</span><br><span class="line">add action=masquerade chain=srcnat comment=&quot;defconf: masquerade&quot; ipsec-policy=out,none out-interface-list=WAN</span><br><span class="line">#</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="配置路由"><a href="#配置路由" class="headerlink" title="配置路由"></a>配置路由</h3><ol>
+<li><p>生成路由表(openwrt上运行)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/bin/curl &#x27;http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest&#x27; | grep ipv4 | grep CN | awk -F\| &#x27;&#123; printf(&quot;%s/%d\n&quot;, $4, 32-log($5)/log(2)) &#125;&#x27; |sed -e &#x27;s/^/add address=/g&#x27; -e &#x27;s/$/ list=CNIP/g&#x27;|sed -e $&#x27;1i\\\n/ip firewall address-list&#x27; -e $&#x27;1i\\\nremove [/ip firewall address-list find list=CNIP]&#x27; -e $&#x27;1i\\\nadd address=10.0.0.0/8 list=CNIP comment=private-network&#x27; -e $&#x27;1i\\\nadd address=172.16.0.0/12 list=CNIP comment=private-network&#x27; -e $&#x27;1i\\\nadd address=192.168.0.0/16 list=CNIP comment=private-network&#x27;&gt;/www/cnip.rsc</span><br></pre></td></tr></table></figure></li>
+<li><p>手动RouterOS导入地址</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/im file=cnip.rsc</span><br></pre></td></tr></table></figure></li>
+<li><p>RouterOS自动导入地址</p>
+</li>
+</ol>
+<ul>
+<li>新建脚本(System-&gt;Scripts-&gt;Scripts-&gt;add New)<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Update blocked.rsc</span><br><span class="line">/tool fetch mode=http url=&quot;http://192.168.3.2/cnip.rsc&quot; dst-path=cnip.rsc</span><br><span class="line">/im file=cnip.rsc</span><br></pre></td></tr></table></figure></li>
+<li>新建定时器(System-&gt;Scheduler-&gt;Add New)<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:execute script=&quot;cnip&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="4">
+<li>设置路由<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">IP-&gt;Routers-&gt;Add New-&gt;Address(0.0.0.0/0)/Gateway(192.168.3.2)/Routing Make(world)</span><br><span class="line">IP-&gt;Firewall-&gt;Mangle-&gt;-&gt;Add New-&gt;China(prerouting)/Src.Address(192.168.3.2)/Action(accept)</span><br><span class="line">IP-&gt;Firewall-&gt;Mangle-&gt;-&gt;Add New-&gt;Chain(prerouting)/Dst.Address List(!CNIP)/Action(make routing)/New </span><br><span class="line">Routing Mark(world)/enable Passthrough</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>5.配置dns</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">IP-&gt;DNS</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://www.willnet.net/index.php/archives/95/">routeros配置vpn分流大陆ip</a></li>
+<li><a href="https://www.right.com.cn/forum/thread-4176666-1-1.html">主路ROS+旁路OP 流量分流+DNS分流 最佳方案教程</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>PVE</tag>
+        <tag>RouterOS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PVE-LXC-Openwrt系统搭建与配置</title>
+    <url>/pages/716d62c5/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Proxmox 7</li>
+<li>Openwrt 21.02.3</li>
+</ul>
+<h2 id="PVE安装Openwrt"><a href="#PVE安装Openwrt" class="headerlink" title="PVE安装Openwrt"></a>PVE安装Openwrt</h2><h3 id="开启udp转发"><a href="#开启udp转发" class="headerlink" title="开启udp转发"></a>开启udp转发</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo &#x27;xt_TPROXY&#x27; &gt; /etc/modules-load.d/tproxy.conf</span><br></pre></td></tr></table></figure>
+
+<h3 id="新建LXC"><a href="#新建LXC" class="headerlink" title="新建LXC"></a>新建LXC</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pct create 101 \</span><br><span class="line">	local:vztmpl/openwrt-21.02.3-x86-64-rootfs.tar.gz \</span><br><span class="line">	--rootfs local-lvm:2 \</span><br><span class="line">	--ostype unmanaged \</span><br><span class="line">	--hostname OpenWrt \</span><br><span class="line">	--arch amd64 \</span><br><span class="line">	--cores 4 \</span><br><span class="line">	--memory 2048 \</span><br><span class="line">	--swap 0 </span><br></pre></td></tr></table></figure>
+
+<h3 id="修改配置文件-etc-pve-lxc-101-conf"><a href="#修改配置文件-etc-pve-lxc-101-conf" class="headerlink" title="修改配置文件 /etc/pve/lxc/101.conf"></a>修改配置文件 <code>/etc/pve/lxc/101.conf</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">arch: amd64</span><br><span class="line">cores: 4</span><br><span class="line">hookscript: local:snippets/openwrt.pl</span><br><span class="line">hostname: OpenWrt</span><br><span class="line">memory: 2048</span><br><span class="line">ostype: unmanaged</span><br><span class="line">rootfs: local:101/vm-101-disk-0.raw,size=2G</span><br><span class="line">swap: 0</span><br><span class="line">lxc.include: /usr/share/lxc/config/openwrt.common.conf</span><br><span class="line"># /dev/ppp  pppoe拨号等功能需要用到</span><br><span class="line">lxc.cgroup.devices.allow: c 108:0 rwm</span><br><span class="line">lxc.net.0.type: phys</span><br><span class="line"># 网卡名称</span><br><span class="line">lxc.net.0.link: enp11s0f0</span><br><span class="line">lxc.net.0.flags: up</span><br><span class="line">lxc.net.0.name: eth0</span><br></pre></td></tr></table></figure>
+<h3 id="创建钩子脚本"><a href="#创建钩子脚本" class="headerlink" title="创建钩子脚本"></a>创建钩子脚本</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//复制</span><br><span class="line">cp /usr/share/pve-docs/examples/guest-example-hookscript.pl /var/lib/vz/snippets/openwrt.pl</span><br><span class="line"></span><br><span class="line">//修改内容</span><br><span class="line"># Second phase &#x27;post-start&#x27; will be executed after the guest</span><br><span class="line"># successfully started.</span><br><span class="line">system(&quot;lxc-device add -n $vmid /dev/ppp&quot;);</span><br><span class="line">system(&quot;lxc-device add -n $vmid /dev/net/tun&quot;);</span><br><span class="line">print &quot;$vmid started successfully.\n&quot;;</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+<h2 id="常用分享"><a href="#常用分享" class="headerlink" title="常用分享"></a>常用分享</h2><h3 id="常用源"><a href="#常用源" class="headerlink" title="常用源"></a>常用源</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">src/gz openwrt_dist http://openwrt-dist.sourceforge.net/packages/base/x86_64</span><br><span class="line">src/gz openwrt_dist_luci http://openwrt-dist.sourceforge.net/packages/luci</span><br></pre></td></tr></table></figure>
+
+<h3 id="常用软件"><a href="#常用软件" class="headerlink" title="常用软件"></a>常用软件</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shadowsocks-libev   ChinaDNS python3  luci-app-chinadns dns-forwarder luci-i18n-wireguard-zh-cn iptables-mod-tproxy  luci-app-dns-forwarder  luci-i18n-base-zh-cn luci-i18n-opkg-zh-cn luci-app-shadowsocks luci-i18n-firewall-zh-cn luci-compat </span><br></pre></td></tr></table></figure>
+
+<h3 id="常用脚本"><a href="#常用脚本" class="headerlink" title="常用脚本"></a>常用脚本</h3><ol>
+<li><p>软件更新</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">opkg update</span><br><span class="line">opkg list-upgradable | cut -f 1 -d &#x27; &#x27; | xargs opkg upgrade</span><br></pre></td></tr></table></figure></li>
+<li><p>更新chinadns</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/bin/wget -O- &#x27;http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest&#x27; | awk -F\| &#x27;/CN\|ipv4/ &#123; printf(&quot;%s/%d\n&quot;, $4, 32-log($5)/log(2)) &#125;&#x27; &gt; /etc/chinadns_chnroute.txt</span><br></pre></td></tr></table></figure></li>
+<li><p>更新RouterOS的cnip文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/bin/curl &#x27;http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest&#x27; | grep ipv4 | grep CN | awk -F\| &#x27;&#123; printf(&quot;%s/%d\n&quot;, $4, 32-log($5)/log(2)) &#125;&#x27; |sed -e &#x27;s/^/add address=/g&#x27; -e &#x27;s/$/ list=CNIP/g&#x27;|sed -e $&#x27;1i\\\n/ip firewall address-list&#x27; -e $&#x27;1i\\\nremove [/ip firewall address-list find list=CNIP]&#x27; -e $&#x27;1i\\\nadd address=10.0.0.0/8 list=CNIP comment=private-network&#x27; -e $&#x27;1i\\\nadd address=172.16.0.0/12 list=CNIP comment=private-network&#x27; -e $&#x27;1i\\\nadd address=192.168.0.0/16 list=CNIP comment=private-network&#x27;&gt;/www/cnip.rsc</span><br></pre></td></tr></table></figure></li>
+<li><p>更新自动代理pac文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/bin/genpac --proxy=&quot;SOCKS5 192.168.3.2:1080&quot; --gfwlist-proxy=&quot;SOCKS5 192.168.3.2:1080&quot; -o /www/gfwlist.pac</span><br></pre></td></tr></table></figure></li>
+<li><p>更新iptv播放列表</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl https://raw.githubusercontent.com/iptv-org/iptv/master/streams/cn.m3u -o /www/cn.m3u</span><br></pre></td></tr></table></figure></li>
+<li><p>安装的软件包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">awk &#x27;/^Package:/&#123;PKG= $2&#125; /^Status: .*user installed/&#123;print PKG&#125;&#x27; /usr/lib/opkg/status</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://downloads.openwrt.org/releases/22.03.0-rc1/targets/x86/64/openwrt-22.03.0-rc1-x86-64-rootfs.tar.gz">openwrt下载地址</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>Openwrt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PVE-HomeAssistant安装配置</title>
+    <url>/pages/b33c9199/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Proxmox 7</li>
+<li>HomeAssistant 8</li>
+</ul>
+<h2 id="配置IOMMU分组"><a href="#配置IOMMU分组" class="headerlink" title="配置IOMMU分组"></a>配置IOMMU分组</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#编辑 /etc/default/grub</span><br><span class="line"></span><br><span class="line">#AMD用户修改为</span><br><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet amd_iommu=on pcie_acs_override=downstream,multifunction&quot;</span><br><span class="line"></span><br><span class="line">update-grub</span><br><span class="line"></span><br><span class="line">#编辑 /etc/modules</span><br><span class="line"></span><br><span class="line">#修改为</span><br><span class="line">vfio</span><br><span class="line">vfio_iommu_type1</span><br><span class="line">vfio_pci</span><br><span class="line">vfio_virqfd</span><br><span class="line"></span><br><span class="line">#最后重启</span><br><span class="line">reboot </span><br></pre></td></tr></table></figure>
+
+<h2 id="PVE安装创建虚拟机"><a href="#PVE安装创建虚拟机" class="headerlink" title="PVE安装创建虚拟机"></a>PVE安装创建虚拟机</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">系统-&gt;BIOS-&gt;OVMF(UEFI)</span><br></pre></td></tr></table></figure>
+
+<h3 id="导入磁盘文件"><a href="#导入磁盘文件" class="headerlink" title="导入磁盘文件"></a>导入磁盘文件</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">qm importdisk 102 haos_generic-x86-64-8.0.rc3.img local</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用磁盘"><a href="#使用磁盘" class="headerlink" title="使用磁盘"></a>使用磁盘</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">双击磁盘-&gt;sata</span><br><span class="line">选项-&gt;启动引导-&gt;sata0</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改配置文件-etc-pve-qemu-server-102-conf"><a href="#修改配置文件-etc-pve-qemu-server-102-conf" class="headerlink" title="修改配置文件 /etc/pve/qemu-server/102.conf "></a>修改配置文件 <code>/etc/pve/qemu-server/102.conf </code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bios: ovmf</span><br><span class="line">boot: order=sata0</span><br><span class="line">cores: 2</span><br><span class="line">cpu: host</span><br><span class="line">hostpci0: 0000:0b:00.1,pcie=1</span><br><span class="line">machine: q35</span><br><span class="line">memory: 2048</span><br><span class="line">meta: creation-qemu=6.1.1,ctime=1651069024</span><br><span class="line">name: Hassio</span><br><span class="line">numa: 0</span><br><span class="line">ostype: l26</span><br><span class="line">sata0: local:102/vm-102-disk-0.raw,size=6G,ssd=1</span><br><span class="line">scsihw: virtio-scsi-pci</span><br><span class="line">smbios1: uuid=02be9043-b8f6-42f7-a94e-05817fd4b2ff</span><br><span class="line">sockets: 1</span><br><span class="line">vmgenid: c6bf3dcd-dec9-4a6a-bb8d-69726f3fe659</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/home-assistant/operating-system/releases/">HomeAssistant下载</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>HomeAssistant</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PVE-LXC-Plex服务安装</title>
+    <url>/pages/c5ec55f0/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Proxmox 7</li>
+<li>Plex Server</li>
+</ul>
+<h1 id="PVE安装创建CT"><a href="#PVE安装创建CT" class="headerlink" title="PVE安装创建CT"></a>PVE安装创建CT</h1><h3 id="配置-etc-pve-lxc-103-conf"><a href="#配置-etc-pve-lxc-103-conf" class="headerlink" title="配置 /etc/pve/lxc/103.conf "></a>配置 <code>/etc/pve/lxc/103.conf </code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">arch: amd64</span><br><span class="line">cores: 4</span><br><span class="line">hostname: Plex</span><br><span class="line">memory: 4096</span><br><span class="line">ostype: debian</span><br><span class="line">rootfs: local:103/vm-103-disk-0.raw,size=4G</span><br><span class="line">swap: 0</span><br><span class="line">lxc.net.0.type: phys</span><br><span class="line">lxc.net.0.link: enp12s0f0</span><br><span class="line">lxc.net.0.flags: up</span><br><span class="line">lxc.net.0.name: eth0</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置系统"><a href="#配置系统" class="headerlink" title="配置系统"></a>配置系统</h2><h3 id="设置静态ip-etc-network-interfaces"><a href="#设置静态ip-etc-network-interfaces" class="headerlink" title="设置静态ip /etc/network/interfaces"></a>设置静态ip <code>/etc/network/interfaces</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line"></span><br><span class="line">auto eth0</span><br><span class="line">iface eth0 inet static</span><br><span class="line">address 192.168.3.4</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">gateway 192.168.3.1</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt install gnupg gnupg2 gnupg1 curl</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装Plex"><a href="#安装Plex" class="headerlink" title="安装Plex"></a>安装Plex</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo deb https://downloads.plex.tv/repo/deb public main | tee /etc/apt/sources.list.d/plexmediaserver.list</span><br><span class="line"></span><br><span class="line">curl https://downloads.plex.tv/plex-keys/PlexSign.key | apt-key add -</span><br><span class="line"></span><br><span class="line">apt install plexmediaserver</span><br></pre></td></tr></table></figure>
+
+
+
+
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>Plex</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PVE-黑群晖安装</title>
+    <url>/pages/bf5e1c36/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Proxmox 7</li>
+<li>dsm7.1</li>
+</ul>
+<h2 id="编译引导文件"><a href="#编译引导文件" class="headerlink" title="编译引导文件"></a>编译引导文件</h2><h3 id="注册github，fork项目"><a href="#注册github，fork项目" class="headerlink" title="注册github，fork项目"></a>注册github，fork项目</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://github.com/tossp/redpill-tool-chain</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><ul>
+<li><p>获取SataPortMap和DiskIdxMap</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 下载地址</span><br><span class="line"># https://github.com/pocopico/tinycore-redpill</span><br><span class="line"></span><br><span class="line"># 获取</span><br><span class="line">./rploader.sh satamap now</span><br></pre></td></tr></table></figure></li>
+<li><p><code>sample_user_config.json</code></p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># &quot;DiskIdxMap&quot;: &quot;0100&quot;,第一个sata控制器的磁盘编号01，02，03，04，第二个sata控制器的磁盘编号00</span><br><span class="line"># &quot;SataPortMap&quot;: &quot;41&quot;,两个sata控制器，分别可以叉4个硬盘和1个硬盘</span><br><span class="line">&#123;</span><br><span class="line">    &quot;extra_cmdline&quot;: &#123;</span><br><span class="line">        &quot;pid&quot;: &quot;0x0001&quot;,</span><br><span class="line">        &quot;vid&quot;: &quot;0x46f4&quot;,</span><br><span class="line">        &quot;DiskIdxMap&quot;: &quot;0100&quot;,</span><br><span class="line">        &quot;SataPortMap&quot;: &quot;41&quot;,</span><br><span class="line">        &quot;SasIdxMap&quot;: &quot;0&quot;,</span><br><span class="line">        &quot;sn&quot;: &quot;1234XXX123&quot;,</span><br><span class="line">        &quot;mac1&quot;: &quot;XXYYXXYYXXYY&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;synoinfo&quot;: &#123;&#125;,</span><br><span class="line">    &quot;ramdisk_copy&quot;: &#123;&#125;,</span><br><span class="line">    &quot;extensions&quot;: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加驱动"><a href="#添加驱动" class="headerlink" title="添加驱动"></a>添加驱动</h3><ul>
+<li><p>驱动仓库</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://github.com/pocopico/rp-ext</span><br></pre></td></tr></table></figure></li>
+<li><p>修改文件添加驱动 <code>.github/workflows/text.yml</code></p>
+<blockquote>
+<p>个人测试bnx2驱动不生效，建议直接使用intel网卡</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">- name: 添加扩展驱动</span><br><span class="line">        if: matrix.platform != &#x27;dva3221&#x27;</span><br><span class="line">        run: |</span><br><span class="line">          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-boot-wait.json</span><br><span class="line">          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-acpid.json</span><br><span class="line">          ./redpill_tool_chain.sh add https://github.com/tossp/redpill-tool-chain/raw/master/extensions/redpill-virtio.json</span><br><span class="line">          </span><br><span class="line">          # 新增内容</span><br><span class="line">          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/bnx2/rpext-index.json</span><br><span class="line">          ./redpill_tool_chain.sh add https://raw.githubusercontent.com/pocopico/rp-ext/master/igb/rpext-index.json</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="提交代码，github仓库执行actions编译，然后下载"><a href="#提交代码，github仓库执行actions编译，然后下载" class="headerlink" title="提交代码，github仓库执行actions编译，然后下载"></a>提交代码，github仓库执行actions编译，然后下载</h3><h2 id="PVE虚拟机"><a href="#PVE虚拟机" class="headerlink" title="PVE虚拟机"></a>PVE虚拟机</h2><h3 id="虚拟机配置"><a href="#虚拟机配置" class="headerlink" title="虚拟机配置"></a>虚拟机配置</h3><ul>
+<li><code>/etc/pve/qemu-server/104.conf</code><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bios: ovmf</span><br><span class="line">boot: order=sata0</span><br><span class="line">cores: 4</span><br><span class="line">cpu: host</span><br><span class="line">hostpci0: 0000:08:00.0</span><br><span class="line">hostpci1: 0000:03:00.1,pcie=1</span><br><span class="line">machine: q35</span><br><span class="line">memory: 8192</span><br><span class="line">meta: creation-qemu=6.1.1,ctime=1651237325</span><br><span class="line">name: NAS</span><br><span class="line">numa: 0</span><br><span class="line">ostype: l26</span><br><span class="line">sata0: local:104/vm-104-disk-0.raw,size=160M</span><br><span class="line">smbios1: uuid=26cff932-b709-4ffc-a292-92d20b03cfd7</span><br><span class="line">sockets: 1</span><br><span class="line">vmgenid: 3b99a19a-7d2a-4551-993b-1e80fa6783be</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="安装群晖系统"><a href="#安装群晖系统" class="headerlink" title="安装群晖系统"></a>安装群晖系统</h3><ul>
+<li>下载地址<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://archive.synology.cn/download/Os/DSM</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/tossp/redpill-tool-chain">redpill-tool-chain</a></li>
+<li><a href="https://github.com/pocopico/tinycore-redpill">tinycore-redpill</a></li>
+<li><a href="https://github.com/pocopico/rp-ext">rp-ext</a></li>
+<li><a href="https://1min.cc/archives/274.html">获取SataPortMap和DiskIdxMap</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>黑群晖</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PVE-OSX-KVM黑苹果</title>
+    <url>/pages/ad20e89e/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Proxmox 7</li>
+</ul>
+<h2 id="制作引导文件"><a href="#制作引导文件" class="headerlink" title="制作引导文件"></a>制作引导文件</h2><h3 id="下载库"><a href="#下载库" class="headerlink" title="下载库"></a>下载库</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/kholia/OSX-KVM.git</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载并转换-OSX-KVM"><a href="#下载并转换-OSX-KVM" class="headerlink" title="下载并转换 OSX-KVM"></a>下载并转换 <code>OSX-KVM</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#下载</span><br><span class="line">./fetch-macOS-v2.py</span><br><span class="line"></span><br><span class="line">#转换</span><br><span class="line">qemu-img convert BaseSystem.dmg -O raw BaseSystem.img</span><br><span class="line"></span><br><span class="line">#迁移</span><br><span class="line">mv BaseSystem.img /var/lib/vz/template/iso/</span><br></pre></td></tr></table></figure>
+
+<h3 id="提取opencore-OSX-KVM-OpenCore"><a href="#提取opencore-OSX-KVM-OpenCore" class="headerlink" title="提取opencore /OSX-KVM/OpenCore"></a>提取opencore <code>/OSX-KVM/OpenCore</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#解压</span><br><span class="line">7z x OpenCore.qcow2</span><br><span class="line"></span><br><span class="line">#迁移</span><br><span class="line">mv primary.img /var/lib/vz/template/iso/</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置虚拟机-Intel"><a href="#设置虚拟机-Intel" class="headerlink" title="设置虚拟机(Intel)"></a>设置虚拟机<code>(Intel)</code></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">args: -device isa-applesmc,osk=&quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot; -smbios type=2 -device usb-kbd,bus=ehci.0,port=2 -cpu host,kvm=on,vendor=GenuineIntel,+kvm_pv_unhalt,+kvm_pv_eoi,+hypervisor,+invtsc</span><br><span class="line">bios: ovmf</span><br><span class="line">boot: order=sata0;ide2;net0;ide0</span><br><span class="line">cores: 4</span><br><span class="line">cpu: host</span><br><span class="line">efidisk0: local:100/vm-100-disk-0.raw,efitype=4m,size=528K</span><br><span class="line">ide0: local:iso/BaseSystem.img,cache=unsafe,size=3143856K</span><br><span class="line">ide2: local:iso/primary.img,cache=unsafe,size=152551936</span><br><span class="line">machine: q35</span><br><span class="line">memory: 10240</span><br><span class="line">meta: creation-qemu=6.2.0,ctime=1653753564</span><br><span class="line">name: macOS</span><br><span class="line">net0: virtio=D2:80:05:5C:93:06,bridge=vmbr0,firewall=1</span><br><span class="line">numa: 0</span><br><span class="line">ostype: other</span><br><span class="line">sata0: local:100/vm-100-disk-1.qcow2,cache=unsafe,size=200G,ssd=1</span><br><span class="line">scsihw: virtio-scsi-pci</span><br><span class="line">smbios1: uuid=4cdfd0e3-e10a-4856-b498-99bb89e4fa7c</span><br><span class="line">sockets: 1</span><br><span class="line">vga: vmware</span><br><span class="line">vmgenid: 0d9974ea-5ae4-416f-8486-484b5e4a52a0</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/kholia/OSX-KVM">OSX-KVM</a><br><a href="https://www.nicksherlock.com/2021/10/installing-macos-12-monterey-on-proxmox-7/">Installing macOS 12 “Monterey” on Proxmox 7</a><br><a href="https://db.ci/daily/5293.html">Proxmox VE 7.1安装macOS 10.15及GPU穿通方案</a></p>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>黑苹果</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>树莓派 ALL in ONE</title>
+    <url>/pages/9d07025b/</url>
+    <content><![CDATA[<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><blockquote>
+<p>本文已经停止维护，请跳转最新地址</p>
+</blockquote>
+<p><a href="https://wiki.maktub.cn/pages/fba71e/">Maktub_Wiki/服务搭建</a></p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Raspberry Pi OS Lite</li>
+</ul>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="开机自启动"><a href="#开机自启动" class="headerlink" title="开机自启动"></a>开机自启动</h3><ul>
+<li><code>auto.sh</code>文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#开启混杂模式</span><br><span class="line">ip link set eth0 promisc on</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#docker macvlan互通</span><br><span class="line">ip link add macvlan_br link eth0 type macvlan mode bridge</span><br><span class="line">ip addr add 192.168.3.5 dev macvlan_br</span><br><span class="line">ip link set macvlan_br up</span><br><span class="line">ip link set macvlan_br promisc on</span><br><span class="line">ip route add 192.168.3.9 dev macvlan_br</span><br><span class="line"></span><br><span class="line">#zerotier转发</span><br><span class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">iptables -A FORWARD -i eth0 -o ztr2qvners -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">iptables -A FORWARD -i ztr2qvners -o eth0 -j ACCEPT</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING -o macvlan_br -j MASQUERADE</span><br><span class="line">iptables -A FORWARD -i macvlan_br -o ztr2qvners -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">iptables -A FORWARD -i ztr2qvners -o macvlan_br -j ACCEPT</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编辑 <code>/etc/rc.local</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/sh -e</span><br><span class="line">#</span><br><span class="line"># rc.local</span><br><span class="line">#</span><br><span class="line"># This script is executed at the end of each multiuser runlevel.</span><br><span class="line"># Make sure that the script will &quot;exit 0&quot; on success or any other</span><br><span class="line"># value on error.</span><br><span class="line">#</span><br><span class="line"># In order to enable or disable this script just change the execution</span><br><span class="line"># bits.</span><br><span class="line">#</span><br><span class="line"># By default this script does nothing.</span><br><span class="line"></span><br><span class="line"># Print the IP address</span><br><span class="line">_IP=$(hostname -I) || true</span><br><span class="line">if [ &quot;$_IP&quot; ]; then</span><br><span class="line">  printf &quot;My IP address is %s\n&quot; &quot;$_IP&quot;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">#挂载硬盘</span><br><span class="line">mount -t ext4 /dev/sda1 /mnt/disk</span><br><span class="line"></span><br><span class="line"># 延迟启动</span><br><span class="line">(</span><br><span class="line">sleep 30</span><br><span class="line">/bin/bash /root/.auto/auto.sh</span><br><span class="line">) &amp;</span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>解决树莓派断开网络连接后，路由消失,为树莓派添加静态路由<br>编辑文件<code>/lib/dhcpcd/dhcpcd-hooks/40-route</code></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ip route add 192.168.3.9 dev macvlan_br</span><br></pre></td></tr></table></figure>
+
+<h3 id="docker管理工具"><a href="#docker管理工具" class="headerlink" title="docker管理工具"></a>docker管理工具</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://github.com/jesseduffield/lazydocker</span><br><span class="line"></span><br><span class="line">#快捷命令</span><br><span class="line">alias lazydocker=&#x27;/root/.tool/lazydocker&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="wireguard管理工具"><a href="#wireguard管理工具" class="headerlink" title="wireguard管理工具"></a>wireguard管理工具</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://github.com/ngoduykhanh/wireguard-ui</span><br></pre></td></tr></table></figure>
+
+<h3 id="flare标签页管理"><a href="#flare标签页管理" class="headerlink" title="flare标签页管理"></a>flare标签页管理</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --name flare --restart=always  -p 5005:5005 -v /mnt/disk/docker/flare:/app soulteary/flare</span><br></pre></td></tr></table></figure>
+
+<h3 id="zerotier异地组网"><a href="#zerotier异地组网" class="headerlink" title="zerotier异地组网"></a>zerotier异地组网</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --name zerotier --restart=always --device=/dev/net/tun --net=host --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v /mnt/disk/docker/zerotier-one:/var/lib/zerotier-one  -v /etc/gai.conf:/etc/gai.conf zerotier/zerotier:latest</span><br><span class="line"></span><br><span class="line"># 开启转发</span><br><span class="line">cho &quot;net.ipv4.ip_forward = 1&quot; &gt;&gt; /etc/sysctl.conf </span><br><span class="line">sysctl -p</span><br><span class="line"></span><br><span class="line"># 配置防火墙</span><br><span class="line">ip link set eth0 promisc on</span><br><span class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">iptables -A FORWARD -i eth0 -o ztr2qvners -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">iptables -A FORWARD -i ztr2qvners -o eth0 -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<h3 id="plex影音库"><a href="#plex影音库" class="headerlink" title="plex影音库"></a>plex影音库</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line">  plex:</span><br><span class="line">    image: plexinc/pms-docker</span><br><span class="line">    restart: always</span><br><span class="line">    network_mode: host</span><br><span class="line">    hostname: moviepilot    </span><br><span class="line">    volumes:   </span><br><span class="line">      - ./config:/config</span><br><span class="line">      - ./transcode:/transcode</span><br><span class="line">      - /mnt/down/download/Plex:/data</span><br><span class="line">    environment: </span><br><span class="line">      - UMASK=000</span><br></pre></td></tr></table></figure>
+
+<h3 id="music-tag-web音乐信息修改"><a href="#music-tag-web音乐信息修改" class="headerlink" title="music_tag_web音乐信息修改"></a>music_tag_web音乐信息修改</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --name music_tag  -p 8001:8001 -v /mnt/down/Plex/Music:/app/media -v /mnt/disk/docker/music_tag_web:/app/data --restart=always xhongc/music_tag_web:latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="filebrowser文件管理"><a href="#filebrowser文件管理" class="headerlink" title="filebrowser文件管理"></a>filebrowser文件管理</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --name filebrowser --restart=always  -v /mnt:/srv  -v /mnt/disk/docker/filebrowser/filebrowser.db:/database.db  -u $(id -u):$(id -g)  -p 8082:80  filebrowser/filebrowser</span><br></pre></td></tr></table></figure>
+<h3 id="迅雷离线下载工具"><a href="#迅雷离线下载工具" class="headerlink" title="迅雷离线下载工具"></a>迅雷离线下载工具</h3><blockquote>
+<p>邀请码 <code>我不是矿神IMNKS</code></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --name=xunlei --hostname=mynas --net=host -v /mnt/disk/docker/xunlei:/xunlei/data -v /mnt/down/xunleidownloads:/xunlei/downloads --restart=unless-stopped --privileged cnk3x/xunlei:latest</span><br></pre></td></tr></table></figure>
+<h3 id="qbittorrent-下载工具"><a href="#qbittorrent-下载工具" class="headerlink" title="qbittorrent 下载工具"></a>qbittorrent 下载工具</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d  --name=qbittorrent --network=host  -e PUID=1000  -e PGID=1000   -e WEBUI_PORT=8081 -v /mnt/disk/docker/qbittorrent/config:/config  -v /mnt/disk/download:/downloads  --restart unless-stopped linuxserver/qbittorrent</span><br></pre></td></tr></table></figure>
+
+<h3 id="home-assistants智能家居中心"><a href="#home-assistants智能家居中心" class="headerlink" title="home-assistants智能家居中心"></a>home-assistants智能家居中心</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --name home-assistants --restart=always -v /mnt/disk/docker/hassio:/config --network=host homeassistant/home-assistant</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="smb共享"><a href="#smb共享" class="headerlink" title="smb共享"></a>smb共享</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim  /etc/samba/smb.conf</span><br><span class="line">[smb]</span><br><span class="line">path = /mnt/disk</span><br><span class="line">writeable=Yes</span><br><span class="line">create mask=0777</span><br><span class="line">directory mask=0777</span><br><span class="line">public=yes</span><br><span class="line">browseable=yes</span><br><span class="line">valid users = root</span><br><span class="line">guest ok = no</span><br></pre></td></tr></table></figure>
+
+<h3 id="alist-网盘挂载"><a href="#alist-网盘挂载" class="headerlink" title="alist 网盘挂载"></a>alist 网盘挂载</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --restart=always -v /mnt/disk/docker/alist:/opt/alist/data -v /mnt/down/alistdown/:/download  -p 5244:5244 --name=&quot;alist&quot; xhofe/alist:latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="moviepilot-媒体搜索"><a href="#moviepilot-媒体搜索" class="headerlink" title="moviepilot 媒体搜索"></a>moviepilot 媒体搜索</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line">  moviepilot:</span><br><span class="line">    image: jxxghp/moviepilot:latest</span><br><span class="line">    ports:</span><br><span class="line">        - 3000:3000 # web 接口</span><br><span class="line">    restart: always</span><br><span class="line">    network_mode: bridge</span><br><span class="line">    hostname: moviepilot    </span><br><span class="line">    volumes:   </span><br><span class="line">      - ./moviepilot:/moviepilot #程序主目录，必选</span><br><span class="line">      - ./config:/config #config 配置文件，必选</span><br><span class="line">      - /mnt/down/download:/downloads</span><br><span class="line">    environment: </span><br><span class="line"># 基础设置</span><br><span class="line">      - UMASK=000</span><br><span class="line">      - SUPERUSER=xxxxxx   #登录账号</span><br><span class="line">      - TMDB_API_DOMAIN=api.tmdb.org</span><br><span class="line"># 下载目录设置</span><br><span class="line">      - DOWNLOAD_PATH=/downloads/moviepilot   # 下载保存目录</span><br><span class="line">      - DOWNLOAD_MOVIE_PATH=/downloads/moviepilot/Movie</span><br><span class="line">      - DOWNLOAD_TV_PATH=/downloads/moviepilot/TVShow</span><br><span class="line">      - DOWNLOAD_ANIME_PATH=/downloads/moviepilot/Anime</span><br><span class="line">      - DOWNLOAD_CATEGORY=false #下载二级分类开关</span><br><span class="line"># 媒体库功能设置     </span><br><span class="line">      - TRANSFER_TYPE=link      #转移方式，支持link/copy/move/softlink  </span><br><span class="line">      - LIBRARY_PATH=/downloads/Plex</span><br><span class="line">      - LIBRARY_MOVIE_NAME=Movie</span><br><span class="line">      - LIBRARY_TV_NAME=TVShow</span><br><span class="line">      - LIBRARY_ANIME_NAME=Anime</span><br><span class="line">      - LIBRARY_CATEGORY=false</span><br><span class="line">      - SCRAP_METADATA=false</span><br><span class="line"># 下载器设置</span><br><span class="line">     ##qbittorrent设置项</span><br><span class="line">      - DOWNLOADER=qbittorrent</span><br><span class="line">      - QB_HOST=http://xxxxxx:xxxxx # qbittorrent地址</span><br><span class="line">      - QB_USER=xxxxxxx</span><br><span class="line">      - QB_PASSWORD=xxxxxxx</span><br><span class="line"># 媒体服务器</span><br><span class="line">      - MEDIASERVER=plex   </span><br><span class="line">      - PLEX_HOST=http://xxxx:xxxxx</span><br><span class="line">      - PLEX_TOKEN=xxxxxxxx</span><br><span class="line">      - MEDIASERVER_SYNC_BLACKLIST:音乐</span><br><span class="line">      </span><br><span class="line">      - BIG_MEMORY_MODE=true</span><br><span class="line"># 用户认证</span><br><span class="line">      - AUTH_SITE=wintersakura  #认证站点</span><br><span class="line">      - WINTERSAKURA_UID=xxxxxxx # 观众 ID </span><br><span class="line">      - WINTERSAKURA_PASSKEY=xxxxxxxx # 观众 passkey</span><br><span class="line"></span><br><span class="line">      - COOKIECLOUD_INTERVAL=10000000</span><br></pre></td></tr></table></figure>
+
+<h3 id="calibre-web-图书管理"><a href="#calibre-web-图书管理" class="headerlink" title="calibre-web 图书管理"></a>calibre-web 图书管理</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name=calibre-web \</span><br><span class="line">  -e PUID=0 \</span><br><span class="line">  -e PGID=0 \</span><br><span class="line">  -e TZ=Asia/Chongqing \</span><br><span class="line">  -p 8083:8083 \</span><br><span class="line">  -v /mnt/disk/docker/calibre/config:/config \</span><br><span class="line">  -v /mnt/disk/docker/calibre/books:/books \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  linuxserver/calibre-web:latest</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="已经废弃，不使用"><a href="#已经废弃，不使用" class="headerlink" title="已经废弃，不使用"></a>已经废弃，不使用</h2><h3 id="nas-tools-媒体搜索"><a href="#nas-tools-媒体搜索" class="headerlink" title="nas-tools 媒体搜索"></a>nas-tools 媒体搜索</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --name nas-tools --restart=always --hostname nas-tools -p 3000:3000 -v /mnt/disk/docker/nastools/config:/config --network host  -v /mnt/down:/disk  -e PUID=1000 -e PGID=1000 -e UMASK=000 -e NASTOOL_AUTO_UPDATE=false nastool/nas-tools</span><br></pre></td></tr></table></figure>
+
+<h3 id="openwrt"><a href="#openwrt" class="headerlink" title="openwrt"></a>openwrt</h3><ul>
+<li>创建虚拟网络</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ip link set eth0 promisc on</span><br><span class="line">docker network create -d macvlan --subnet=192.168.3.1/24 --gateway=192.168.3.8 -o parent=eth0 macnet</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置防火墙</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ip link set eth0 promisc on</span><br><span class="line"># docker value</span><br><span class="line">ip link add link eth0 brnet type macvlan mode bridge</span><br><span class="line">ip link set dev brnet up</span><br><span class="line">//192.168.3.9 容器ip</span><br><span class="line">ip route add 192.168.3.9 dev brnet</span><br></pre></td></tr></table></figure>
+<ul>
+<li>导入镜像</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker import https://downloads.openwrt.org/releases/22.03.2/targets/armvirt/64/openwrt-22.03.2-armvirt-64-default-rootfs.tar.gz openwrt-22.03.2</span><br><span class="line"># 或</span><br><span class="line">docker pull openwrtorg/rootfs:armvirt-64-22.03.2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建容器</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run --restart always --name openwrt -d --network macnet --privileged openwrtorg/rootfs:armvirt-64-22.03.2 /sbin/init</span><br></pre></td></tr></table></figure>
+
+<h3 id="V2rayA透明代理"><a href="#V2rayA透明代理" class="headerlink" title="V2rayA透明代理"></a>V2rayA透明代理</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --restart=always --cpu-shares 3072 --privileged --network=macnet --ip 192.168.3.9 --name v2raya -e V2RAYA_LOG_FILE=/tmp/v2raya.log -v /lib/modules:/lib/modules:ro -v /etc/resolv.conf:/etc/resolv.conf -v /mnt/disk/docker/v2raya/config:/etc/v2raya mzz2017/v2raya</span><br></pre></td></tr></table></figure>
+
+<h3 id="clash透明代理"><a href="#clash透明代理" class="headerlink" title="clash透明代理"></a>clash透明代理</h3><ol>
+<li>安装</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d  --name clash  --restart unless-stopped --device=/dev/net/tun --log-opt max-size=1m  --network host --privileged  -v /mnt/disk/docker/clash:/root/.config/clash  dreamacro/clash-premium</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>配置文件</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mixed-port: 7890</span><br><span class="line">socks-port: 7891</span><br><span class="line">redir-port: 7892</span><br><span class="line"># Transparent proxy server port for Linux (TProxy TCP and TProxy UDP)</span><br><span class="line">tproxy-port: 7893</span><br><span class="line">allow-lan: true</span><br><span class="line">mode: Rule</span><br><span class="line">log-level: info #info #debug</span><br><span class="line">external-ui: clash-dashboard</span><br><span class="line">external-controller: 0.0.0.0:9090</span><br><span class="line">secret: &quot;&quot;</span><br><span class="line">experimental:</span><br><span class="line">  ignore-resolve-fail: true # ignore dns reslove fail, default value is true</span><br><span class="line">dns:</span><br><span class="line">  enable: true</span><br><span class="line">  listen: 0.0.0.0:53</span><br><span class="line">  ipv6: false</span><br><span class="line">  enhanced-mode: redir-host #redir-host #fake-ip</span><br><span class="line">  fake-ip-range: 198.18.0.1/16</span><br><span class="line">  fake-ip-filter: # fake ip white domain list</span><br><span class="line">    - &#x27;*.lan&#x27;</span><br><span class="line">  nameserver:</span><br><span class="line">    - 114.114.114.114</span><br><span class="line">    - 8.8.8.8</span><br><span class="line">  fallback:</span><br><span class="line">    - 114.114.114.114</span><br><span class="line">    - 8.8.8.8</span><br><span class="line">interface-name: eth0</span><br><span class="line">auto-redir:</span><br><span class="line">  enable: true</span><br><span class="line">  auto-route: true</span><br><span class="line">tun:</span><br><span class="line">  enable: true</span><br><span class="line">  stack: system</span><br><span class="line">  dns-hijack:</span><br><span class="line">    - any:53</span><br><span class="line">    - tcp://any:53</span><br><span class="line">  auto-route: true</span><br><span class="line">#ebpf和zerotier和wirguard冲突</span><br><span class="line">#ebpf:</span><br><span class="line">    #redirect-to-tun:</span><br><span class="line">        #- eth0</span><br><span class="line">#直连端口</span><br><span class="line">rules:</span><br><span class="line">  - DST-PORT,9993,DIRECT</span><br><span class="line">  - SRC-PORT,9993,DIRECT</span><br><span class="line">  - DST-PORT,18721,DIRECT</span><br><span class="line">  - SRC-PORT,18721,DIRECT</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>拯救被墙ip-vmess+ws+tls套cf+cdn</title>
+    <url>/pages/1e41147d/</url>
+    <content><![CDATA[<h2 id="一键安装脚本"><a href="#一键安装脚本" class="headerlink" title="一键安装脚本"></a>一键安装脚本</h2><ul>
+<li><a href="https://github.com/wulabing/V2Ray_ws-tls_bash_onekey">V2Ray_ws-tls_bash_onekey</a></li>
+</ul>
+<h2 id="注册cloudflare"><a href="#注册cloudflare" class="headerlink" title="注册cloudflare"></a><a href="https://www.cloudflare.com/">注册cloudflare</a></h2><ol>
+<li>域名配置dns</li>
+<li>控制面板<code>DNS</code>配置域名<code>A</code>解析</li>
+<li>控制面板<code>SSL/TLS</code>设置为<code>Full(strict)</code></li>
+</ol>
+<h2 id="免费域名注册"><a href="#免费域名注册" class="headerlink" title="免费域名注册"></a>免费域名注册</h2><ul>
+<li><a href="https://www.freenom.com/">Freenom</a></li>
+</ul>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><ul>
+<li>Git: Failed sending HTTP2 data solution</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt reinstall libcurl3-gnutls/buster</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>VPS</category>
+      </categories>
+      <tags>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>32M内存ipv6运行v2ray套cf cdn</title>
+    <url>/pages/78e7ed04/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>alpine 3.16</li>
+</ul>
+<h2 id="V2ray"><a href="#V2ray" class="headerlink" title="V2ray"></a>V2ray</h2><ul>
+<li><p>安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#安装</span><br><span class="line">apk add v2ray</span><br><span class="line"></span><br><span class="line">#开机启动</span><br><span class="line">rc-update add v2ray</span><br><span class="line"></span><br><span class="line">#启动</span><br><span class="line">rc-service v2ray</span><br></pre></td></tr></table></figure></li>
+<li><p>配置<code>/etc/v2ray/config.json</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;inbounds&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;port&quot;: 80,</span><br><span class="line">      &quot;listen&quot;:&quot;::&quot;,</span><br><span class="line">      &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;clients&quot;: [</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;id&quot;: &quot;#自己生成uuid&quot;,</span><br><span class="line">            &quot;alterId&quot;: 0</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;streamSettings&quot;: &#123;</span><br><span class="line">        &quot;network&quot;: &quot;ws&quot;,</span><br><span class="line">        &quot;wsSettings&quot;: &#123;</span><br><span class="line">        &quot;path&quot;: &quot;#自己填写路径&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;outbounds&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">      &quot;settings&quot;: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Cloudflare配置"><a href="#Cloudflare配置" class="headerlink" title="Cloudflare配置"></a>Cloudflare配置</h2><ol>
+<li>首页-&gt;Workers-&gt;Create a Service</li>
+<li>选择<code>Http handler</code>和<code>Service Worker Syntax</code></li>
+<li>右上角<code>Quick edit</code><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">addEventListener(</span><br><span class="line">  &#x27;fetch&#x27;,event =&gt; &#123;</span><br><span class="line">     let url=new URL(event.request.url);</span><br><span class="line">     url.hostname=&#x27;#自己的域名,如xxx.baidu.com&#x27;;</span><br><span class="line">     if(url.protocol == &#x27;https:&#x27;) &#123;</span><br><span class="line">        url.protocol=&#x27;http:&#x27;</span><br><span class="line">     &#125;</span><br><span class="line">     let request=new Request(url,event.request);</span><br><span class="line">     if(request.headers.has(&quot;Origin&quot;)) &#123;</span><br><span class="line">       request.headers.delete(&quot;Origin&quot;);</span><br><span class="line">     &#125;</span><br><span class="line">     event.respondWith(</span><br><span class="line">          fetch(request)</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li>域名管理页面<code>Workers Routes</code></li>
+<li>Route填写域名，如<code>xxx.baidu.com/*</code></li>
+<li>Service选择你创建的Workers Service</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/lesuixin/v2ray-cf">v2ray套CF无域名加速的小白教程</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>VPS</category>
+      </categories>
+      <tags>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>手动搭建vmess+ws+tls(V2ray+Caddy)</title>
+    <url>/pages/d20bb833/</url>
+    <content><![CDATA[<h2 id="V2Ray"><a href="#V2Ray" class="headerlink" title="V2Ray"></a>V2Ray</h2><ul>
+<li> <a href="https://github.com/v2fly/fhs-install-v2ray">安装</a></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置<code>/usr/local/etc/v2ray/config.json</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;inbounds&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;port&quot;: 10000,</span><br><span class="line">      &quot;listen&quot;:&quot;127.0.0.1&quot;,</span><br><span class="line">      &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;clients&quot;: [</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;id&quot;: &quot;#自己生成uuid&quot;,</span><br><span class="line">            &quot;alterId&quot;: 0</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;streamSettings&quot;: &#123;</span><br><span class="line">        &quot;network&quot;: &quot;ws&quot;,</span><br><span class="line">        &quot;wsSettings&quot;: &#123;</span><br><span class="line">        &quot;path&quot;: &quot;#自己填写路径&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;outbounds&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">      &quot;settings&quot;: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Caddy"><a href="#Caddy" class="headerlink" title="Caddy"></a>Caddy</h2><blockquote>
+<p>注意：启动申请证书没成功前不要开启CDN</p>
+</blockquote>
+<ul>
+<li><a href="https://caddyserver.com/docs/install#debian-ubuntu-raspbian">安装</a></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt install -y debian-keyring debian-archive-keyring apt-transport-https</span><br><span class="line">curl -1sLf &#x27;https://dl.cloudsmith.io/public/caddy/stable/gpg.key&#x27; | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg</span><br><span class="line">curl -1sLf &#x27;https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt&#x27; | tee /etc/apt/sources.list.d/caddy-stable.list</span><br><span class="line">apt update</span><br><span class="line">apt install caddy</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置<code>/etc/caddy/Caddyfile</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#域名 &#123;</span><br><span class="line">  log &#123;</span><br><span class="line">      output file /etc/caddy/caddy.log</span><br><span class="line">  &#125;</span><br><span class="line">  tls &#123;</span><br><span class="line">      protocols tls1.2 tls1.3</span><br><span class="line">      ciphers TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256</span><br><span class="line">      curves x25519</span><br><span class="line">  &#125;</span><br><span class="line">  @v2ray_websocket &#123;</span><br><span class="line">      path v2ray的路径</span><br><span class="line">      header Connection Upgrade</span><br><span class="line">      header Upgrade websocket</span><br><span class="line">  &#125;</span><br><span class="line">  reverse_proxy @v2ray_websocket localhost:10000</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>校验</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget https://#域名</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://guide.v2fly.org/advanced/wss_and_web.html">WebSocket + TLS + Web</a></li>
+<li><a href="https://github.com/v2fly/fhs-install-v2ray">fhs-install-v2ray</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>VPS</category>
+      </categories>
+      <tags>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Scascaleway 自动开机脚本</title>
+    <url>/pages/4209dbe0/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>MACOS</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">brew install scw</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建虚拟机"><a href="#创建虚拟机" class="headerlink" title="创建虚拟机"></a>创建虚拟机</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 登录</span><br><span class="line">scw init</span><br><span class="line"></span><br><span class="line"># 创建服务器</span><br><span class="line">scw instance server create type=STARDUST1-S zone=fr-par-1 image=debian_bullseye root-volume=l:10G name=Denian ip=none ipv6=true project-id=你的账号UUID</span><br><span class="line"></span><br><span class="line"># 查看服务器</span><br><span class="line">scw instance server list</span><br><span class="line"></span><br><span class="line"># 开机</span><br><span class="line">scw instance server start 你的机器UUID</span><br></pre></td></tr></table></figure>
+
+<h2 id="开机脚本"><a href="#开机脚本" class="headerlink" title="开机脚本"></a>开机脚本</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/zsh</span><br><span class="line">MACHINE_UUID=&quot;你的机器UUID&quot;</span><br><span class="line"></span><br><span class="line">STAR_MACHINE() &#123;</span><br><span class="line">    scw instance server start &quot;$&#123;MACHINE_UUID&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">SEND_NOTIFY()&#123;</span><br><span class="line">	echo &quot;成功&quot;	</span><br><span class="line">&#125;</span><br><span class="line">while true; do</span><br><span class="line">	STATUS=$(scw instance server list | sed -n &#x27;2p&#x27; | awk &#x27;&#123;print $4&#125;&#x27;)</span><br><span class="line">	if [[ $&#123;STATUS&#125; == &quot;starting&quot; ]]; then</span><br><span class="line">		echo &quot;Your server status is $&#123;STATUS&#125;&quot;</span><br><span class="line">		echo &quot;Starting...Wait for 60 seconds to check again...&quot;</span><br><span class="line">		sleep 60</span><br><span class="line">	elif [[ $&#123;STATUS&#125; == &quot;archived&quot; ]]; then</span><br><span class="line">		echo &quot;Your server status is $&#123;STATUS&#125;&quot;</span><br><span class="line">		echo &quot;Now we start your machine...&quot;</span><br><span class="line">		STAR_MACHINE</span><br><span class="line">		sleep 60</span><br><span class="line">	else</span><br><span class="line">		SEND_NOTIFY</span><br><span class="line">		break</span><br><span class="line">	fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://qiedd.com/1207.html">星尘Scaleway IPv6 VPS API 自动开机脚本</a></li>
+<li><a href="https://github.com/scaleway/scaleway-cli">scaleway-cli</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>VPS</category>
+      </categories>
+      <tags>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>纯ipv6 vps 套cf wrap拥有ipv4的访问能力</title>
+    <url>/pages/435fe954/</url>
+    <content><![CDATA[<blockquote>
+<p>感谢Cloudflare的免费服务，大家合理使用</p>
+</blockquote>
+<h2 id="安装wireguard"><a href="#安装wireguard" class="headerlink" title="安装wireguard"></a>安装wireguard</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apt install wireguard-tools</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装wgfc"><a href="#安装wgfc" class="headerlink" title="安装wgfc"></a>安装wgfc</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 安装 wgcf</span><br><span class="line">curl -fsSL git.io/wgcf.sh | sudo bash</span><br><span class="line"></span><br><span class="line"># 注册</span><br><span class="line">wgcf register</span><br><span class="line"></span><br><span class="line"># 生成配置</span><br><span class="line">wgcf generate</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置和启动"><a href="#配置和启动" class="headerlink" title="配置和启动"></a>配置和启动</h2><ul>
+<li><p>修改配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[Interface]</span><br><span class="line">PrivateKey = MKAskClhM858SHhlrCHG0HRgWaEIhLslJYuxOV9Ct30=</span><br><span class="line">Address = 自动生成</span><br><span class="line">Address = 自动生成</span><br><span class="line">DNS = 2001:4860:4860::8888,2001:4860:4860::8844,8.8.8.8,8.8.4.4</span><br><span class="line">MTU = 1280</span><br><span class="line"></span><br><span class="line">#ipv4</span><br><span class="line">#PostUp = ip -4 rule add from 本地ipv4 lookup main</span><br><span class="line">#PostDown = ip -4 rule delete from 本地ipv4 lookup main</span><br><span class="line"></span><br><span class="line">PostUp = ip -6 rule add from 本地ipv6 lookup main</span><br><span class="line">PostDown = ip -6 rule delete from 本地ipv6 lookup main</span><br><span class="line"></span><br><span class="line">[Peer]</span><br><span class="line">PublicKey = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=</span><br><span class="line">AllowedIPs = 0.0.0.0/0</span><br><span class="line">Endpoint = [2606:4700:d0::a29f:c001]:2408</span><br></pre></td></tr></table></figure></li>
+<li><p>启动指令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 复制文件</span><br><span class="line">cp wgcf-profile.conf /etc/wireguard/wgcf.conf</span><br><span class="line"></span><br><span class="line"># 启动</span><br><span class="line">wg-quick up wgcf</span><br><span class="line"></span><br><span class="line"># 测试</span><br><span class="line"># IPv4 Only VPS</span><br><span class="line">curl -6 ip.p3terx.com</span><br><span class="line"># IPv6 Only VPS</span><br><span class="line">curl -4 ip.p3terx.com</span><br><span class="line"></span><br><span class="line"># 关闭</span><br><span class="line">wg-quick down wgcf</span><br></pre></td></tr></table></figure></li>
+<li><p>开机启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 启用守护进程</span><br><span class="line">sudo systemctl start wg-quick@wgcf</span><br><span class="line"># 设置开机启动</span><br><span class="line">sudo systemctl enable wg-quick@wgcf</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://github.com/fscarmen/warp">warp</a></li>
+<li><a href="https://nat64.net/">net</a></li>
+<li><a href="https://p3terx.com/archives/use-cloudflare-warp-to-add-extra-ipv4-or-ipv6-network-support-to-vps-servers-for-free.html">Cloudflare WARP 给 Linux VPS 云服务器添加原生 IPv4/IPv6 双栈网络</a></li>
+<li><a href="https://p3terx.com/archives/debian-linux-vps-server-wireguard-installation-tutorial.html">Debian Linux VPS 服务器 WireGuard 安装教程</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>VPS</category>
+      </categories>
+      <tags>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>shell命令行管理vps</title>
+    <url>/pages/57a9596a/</url>
+    <content><![CDATA[<h2 id="脚本-sshmgr-sh"><a href="#脚本-sshmgr-sh" class="headerlink" title="脚本 sshmgr.sh"></a>脚本 <code>sshmgr.sh</code></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">conf=/Users/h/Tool/sshmgr.conf</span><br><span class="line">set sshname=</span><br><span class="line">set sshhost=</span><br><span class="line">menu() &#123;</span><br><span class="line">    while read line</span><br><span class="line">    do</span><br><span class="line">        if [ &quot;$&#123;line:0:1&#125;&quot; == &quot;#&quot; ];then</span><br><span class="line">            continue</span><br><span class="line">        fi</span><br><span class="line"></span><br><span class="line">        if [ &quot;$&#123;line&#125;z&quot; == &quot;z&quot; ];then</span><br><span class="line">            continue</span><br><span class="line">        fi</span><br><span class="line"></span><br><span class="line">        if [ &quot;$&#123;line:0:2&#125;&quot; == &quot;--&quot; ];then</span><br><span class="line">            echo &#x27;&#x27;</span><br><span class="line">            continue</span><br><span class="line">        fi</span><br><span class="line">        # # 序号 | 显示名称 | IP | 端口 | 用户名 | 密码 | key </span><br><span class="line">        id=`echo $line|awk -F &quot;|&quot; &#x27;&#123;print $1&#125;&#x27;`</span><br><span class="line">        name=`echo $line|awk -F &quot;|&quot; &#x27;&#123;print $2&#125;&#x27;`</span><br><span class="line">        ip=`echo $line|awk -F &quot;|&quot; &#x27;&#123;print $3&#125;&#x27;`</span><br><span class="line">        echo $id $name $ip</span><br><span class="line">    done &lt; $&#123;conf&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">link() &#123;</span><br><span class="line">    while read line</span><br><span class="line">    do</span><br><span class="line">        if [ &quot;$&#123;line:0:1&#125;&quot; == &quot;#&quot; ];then</span><br><span class="line">            continue</span><br><span class="line">        fi</span><br><span class="line"></span><br><span class="line">        if [ &quot;$&#123;line&#125;z&quot; == &quot;z&quot; ];then</span><br><span class="line">            continue</span><br><span class="line">        fi</span><br><span class="line"></span><br><span class="line">        if [ &quot;$&#123;line:0:2&#125;&quot; == &quot;--&quot; ];then</span><br><span class="line">            continue</span><br><span class="line">        fi</span><br><span class="line"></span><br><span class="line">        # # 序号 | 显示名称 | IP | 端口 | 用户名 | key </span><br><span class="line">        id=`echo $line|awk -F &quot;|&quot; &#x27;&#123;print $1&#125;&#x27;`</span><br><span class="line">        name=`echo $line|awk -F &quot;|&quot; &#x27;&#123;print $2&#125;&#x27;`</span><br><span class="line">        host=`echo $line|awk -F &quot;|&quot; &#x27;&#123;print $3&#125;&#x27;`</span><br><span class="line">        port=`echo $line|awk -F &quot;|&quot; &#x27;&#123;print $4&#125;&#x27;`</span><br><span class="line">        username=`echo $line|awk -F &quot;|&quot; &#x27;&#123;print $5&#125;&#x27;`</span><br><span class="line">        key=`echo $line|awk -F &quot;|&quot; &#x27;&#123;print $6&#125;&#x27;`</span><br><span class="line"></span><br><span class="line">        if [ &quot;$id&quot; -eq &quot;$1&quot; ];then</span><br><span class="line">            sshname=$name</span><br><span class="line">            sshhost=`echo $username@$host -p $port -i $key`</span><br><span class="line">            break</span><br><span class="line">        fi</span><br><span class="line">    done &lt; $&#123;conf&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">while true; do</span><br><span class="line">  menu</span><br><span class="line">  read -p &#x27;输入进入的服务器:&#x27; cmd</span><br><span class="line">  </span><br><span class="line">  if [ &quot;$&#123;cmd&#125;&quot; == &quot;0&quot; ];then</span><br><span class="line">    break</span><br><span class="line">  fi</span><br><span class="line"></span><br><span class="line">  sshhost=</span><br><span class="line">  link $cmd</span><br><span class="line"></span><br><span class="line">  if [ -z &quot;$&#123;sshhost&#125;&quot; ];then</span><br><span class="line">    echo &#x27;选择的服务器不存在,请重新选择.&#x27;</span><br><span class="line">  else</span><br><span class="line">    echo 正在链接[$name]服务器...</span><br><span class="line">    ssh $sshhost</span><br><span class="line">  fi</span><br><span class="line">done</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="配置文件-sshmgr-conf"><a href="#配置文件-sshmgr-conf" class="headerlink" title="配置文件 sshmgr.conf"></a>配置文件 <code>sshmgr.conf</code></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 序号 | 显示名称 | IP | 端口 | 用户名 | key </span><br><span class="line">1|namea|192.168.1.1|22|root|~/.ssh/id_rsa</span><br></pre></td></tr></table></figure>
+
+<h2 id="快捷启动-zshrc"><a href="#快捷启动-zshrc" class="headerlink" title="快捷启动.zshrc"></a>快捷启动<code>.zshrc</code></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">alias ssmgr=&#x27;/Users/h/Tool/sshmgr.sh&#x27;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://www.jianshu.com/p/796f51542699">Mac中多ssh连接管理脚本</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>VPS</category>
+      </categories>
+      <tags>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>部署/cppla/ServerStatus探针</title>
+    <url>/pages/230dbe43/</url>
+    <content><![CDATA[<h2 id="开源项目地址"><a href="#开源项目地址" class="headerlink" title="开源项目地址"></a>开源项目地址</h2><ul>
+<li><a href="https://github.com/cppla/ServerStatus">ServerStatus</a></li>
+</ul>
+<h2 id="部署服务器端"><a href="#部署服务器端" class="headerlink" title="部署服务器端"></a>部署服务器端</h2><ul>
+<li><p>安装服务</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --restart=always --name=serverstatus -v /root/.docker/serverstatus/serverstatus-config.json:/ServerStatus/server/config.json -v /root/.docker/serverstatus/serverstatus-monthtraffic:/usr/share/nginx/html/json -p 127.0.0.1:8080:80 -p 35601:35601 cppla/serverstatus</span><br></pre></td></tr></table></figure></li>
+<li><p>配置服务器文件，<code>/root/.docker/serverstatus/serverstatus-config.json</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;servers&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;username&quot;: &quot;自定义用户名&quot;,</span><br><span class="line">            &quot;name&quot;: &quot;服务器名称&quot;,</span><br><span class="line">            &quot;type&quot;: &quot;kvm&quot;,</span><br><span class="line">            &quot;host&quot;: &quot;host1&quot;,</span><br><span class="line">            &quot;location&quot;: &quot;中国&quot;,</span><br><span class="line">            &quot;password&quot;: &quot;自定义密码&quot;,</span><br><span class="line">            &quot;monthstart&quot;: 1</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;watchdog&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;cpu high warning&quot;,</span><br><span class="line">            &quot;rule&quot;: &quot;cpu&gt;90&amp;load_1&gt;3&quot;,</span><br><span class="line">            &quot;interval&quot;: 600,</span><br><span class="line">            &quot;callback&quot;: &quot;https://yourSMSurl&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;memory high warning&quot;,</span><br><span class="line">            &quot;rule&quot;: &quot;(memory_used/memory_total)*100&gt;90&quot;,</span><br><span class="line">            &quot;interval&quot;: 300,</span><br><span class="line">            &quot;callback&quot;: &quot;https://yourSMSurl&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;offline warning&quot;,</span><br><span class="line">            &quot;rule&quot;: &quot;online4=0&amp;online6=0&quot;,</span><br><span class="line">            &quot;interval&quot;: 600,</span><br><span class="line">            &quot;callback&quot;: &quot;https://yourSMSurl&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;you can parse an expression combining any known field&quot;,</span><br><span class="line">            &quot;rule&quot;: &quot;load_5&gt;3&quot;,</span><br><span class="line">            &quot;interval&quot;: 900,</span><br><span class="line">            &quot;callback&quot;: &quot;https://yourSMSurl&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>配置https(caddy)，编辑<code>/etc/caddy/Caddyfile</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">域名 &#123;</span><br><span class="line">	reverse_proxy localhost:8080</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="部署客户端"><a href="#部署客户端" class="headerlink" title="部署客户端"></a>部署客户端</h2></li>
+<li><p>kvm开启bbr（可选）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo &quot;net.core.default_qdisc=fq&quot; &gt;&gt; /etc/sysctl.conf</span><br><span class="line">echo &quot;net.ipv4.tcp_congestion_control=bbr&quot; &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure></li>
+<li><p>openvz开启bbr（可选）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget --no-cache -O lkl-haproxy.sh https://github.com/mzz2017/lkl-haproxy/raw/master/lkl-haproxy.sh &amp;&amp; bash lkl-haproxy.sh</span><br></pre></td></tr></table></figure></li>
+<li><p>新建服务服务，<code>vim /lib/systemd/system/status-client.service</code></p>
+</li>
+</ul>
+<blockquote>
+<p>debian系统服务</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=ServerStatus-Client</span><br><span class="line">After=network.target</span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/bin/python3 /root/.tool/client-linux.py</span><br><span class="line">ExecReload=/bin/kill -HUP $MAINPID</span><br><span class="line">Restart=on-failure</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>安装alpine系统依赖</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apk add python3 procps iproute2 coreutils</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>alpine系统服务，<code>vim /etc/init.d/status-client</code></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/sbin/openrc-run</span><br><span class="line"># Copyright 1999-2018 Gentoo Foundation</span><br><span class="line"># Distributed under the terms of the GNU General Public License v2</span><br><span class="line"></span><br><span class="line">command=&quot;/usr/bin/python3 /root/.tool/client-linux.py&quot;</span><br><span class="line">command_background=true</span><br><span class="line">pidfile=&quot;/run/$&#123;RC_SVCNAME&#125;.pid&quot;</span><br><span class="line">depend() &#123;</span><br><span class="line">	need net</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>设置权限</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chmod +x /etc/init.d/status-client</span><br></pre></td></tr></table></figure>
+
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>网络测试脚本<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget -qO- bench.sh | bash</span><br></pre></td></tr></table></figure></li>
+<li>tcp/http/docker监听<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --restart=always -p 3001:3001 -v /mnt/disk/docker/kuma:/app/data --name uptime-kuma louislam/uptime-kuma:1</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>VPS</category>
+      </categories>
+      <tags>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Cloudflare设置DDNS</title>
+    <url>/pages/15723b0a/</url>
+    <content><![CDATA[<h2 id="Caddy自建ip查询"><a href="#Caddy自建ip查询" class="headerlink" title="Caddy自建ip查询"></a>Caddy自建ip查询</h2><ol>
+<li>配置DNS的<code>A</code>和<code>AAAA</code>的解析</li>
+<li>编辑<code>/etc/caddy/Caddyfile</code></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ipv4.xxx.com, ipv6.xxx.com &#123;</span><br><span class="line">	templates</span><br><span class="line">	respond &quot;&#123;&#123;.RemoteIP&#125;&#125;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="DDNS脚本"><a href="#DDNS脚本" class="headerlink" title="DDNS脚本"></a>DDNS脚本</h1><p>编辑<code>/root/.cf/cf-ddns.sh</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line"># CHANGE THESE</span><br><span class="line">auth_token=&quot;xxx&quot; # found in cloudflare account settings</span><br><span class="line">zone_name=&quot;xxx.com&quot;</span><br><span class="line">record_name=&quot;xxx.xxx.com&quot;</span><br><span class="line"></span><br><span class="line"># MAYBE CHANGE THESE</span><br><span class="line">ip=$(curl -s http://ipv4.xxx.com)</span><br><span class="line">ip_file=&quot;.cf/ip.txt&quot;</span><br><span class="line">id_file=&quot;.cf/cloudflare.ids&quot;</span><br><span class="line">log_file=&quot;.cf/cloudflare.log&quot;</span><br><span class="line"></span><br><span class="line"># LOGGER</span><br><span class="line">log() &#123;</span><br><span class="line">    if [ &quot;$1&quot; ]; then</span><br><span class="line">        echo -e &quot;[$(date)] - $1&quot; &gt;&gt; $log_file</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># SCRIPT START</span><br><span class="line">log &quot;Check Initiated&quot;</span><br><span class="line"></span><br><span class="line">if [ -f $ip_file ]; then</span><br><span class="line">    old_ip=$(cat $ip_file)</span><br><span class="line">    if [ $ip == $old_ip ]; then</span><br><span class="line">        echo &quot;IP has not changed.&quot;</span><br><span class="line">        exit 0</span><br><span class="line">    fi</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">if [ -f $id_file ] &amp;&amp; [ $(wc -l $id_file | cut -d &quot; &quot; -f 1) == 2 ]; then</span><br><span class="line">    zone_identifier=$(head -1 $id_file)</span><br><span class="line">    record_identifier=$(tail -1 $id_file)</span><br><span class="line">else</span><br><span class="line">    zone_identifier=$(curl -s -X GET &quot;https://api.cloudflare.com/client/v4/zones?name=$zone_name&quot; -H &quot;Authorization: Bearer $auth_token&quot; -H &quot;Content-Type: application/json&quot; | grep -Po &#x27;(?&lt;=&quot;id&quot;:&quot;)[^&quot;]*&#x27; | head -1 )</span><br><span class="line">    record_identifier=$(curl -s -X GET &quot;https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records?name=$record_name&quot; -H &quot;Authorization: Bearer $auth_token&quot; -H &quot;Content-Type: application/json&quot;  | grep -Po &#x27;(?&lt;=&quot;id&quot;:&quot;)[^&quot;]*&#x27;)</span><br><span class="line">    echo &quot;$zone_identifier&quot; &gt; $id_file</span><br><span class="line">    echo &quot;$record_identifier&quot; &gt;&gt; $id_file</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">update=$(curl -s -X PUT &quot;https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records/$record_identifier&quot; -H &quot;Authorization: Bearer $auth_token&quot; -H &quot;Content-Type: application/json&quot; --data &quot;&#123;\&quot;id\&quot;:\&quot;$zone_identifier\&quot;,\&quot;type\&quot;:\&quot;A\&quot;,\&quot;name\&quot;:\&quot;$record_name\&quot;,\&quot;content\&quot;:\&quot;$ip\&quot;&#125;&quot;)</span><br><span class="line"></span><br><span class="line">if [[ $update == *&quot;\&quot;success\&quot;:false&quot;* ]]; then</span><br><span class="line">    message=&quot;API UPDATE FAILED. DUMPING RESULTS:\n$update&quot;</span><br><span class="line">    log &quot;$message&quot;</span><br><span class="line">    echo -e &quot;$message&quot;</span><br><span class="line">    exit 1 </span><br><span class="line">else</span><br><span class="line">    message=&quot;IP changed to: $ip&quot;</span><br><span class="line">    echo &quot;$ip&quot; &gt; $ip_file</span><br><span class="line">    log &quot;$message&quot;</span><br><span class="line">    echo &quot;$message&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<h2 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h2><p>输入<code>crontab -e</code>，添加</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 无日志</span><br><span class="line">*/2 * * * * /root/cf-v4-ddns.sh &gt;/dev/null 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">//有日志</span><br><span class="line">*/2 * * * * /root/cf-v4-ddns.sh &gt;&gt; /root/.cf/cf-ddns.log 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://moththe.com/posts/cf_ddns/">Cloudflare 一键 DDNS 脚本及 使用教程</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>软路由</category>
+      </categories>
+      <tags>
+        <tag>DDNS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Nat VPS自定义端口搭建Zerotier Moon</title>
+    <url>/pages/3bdd7537/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>NAT VPS</li>
+<li>Ubuntu 22.04</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="安装Zerotier"><a href="#安装Zerotier" class="headerlink" title="安装Zerotier"></a>安装Zerotier</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl -s https://install.zerotier.com | sudo bash</span><br></pre></td></tr></table></figure>
+<h3 id="自定义端口-编辑-var-lib-zerotier-one-local-conf"><a href="#自定义端口-编辑-var-lib-zerotier-one-local-conf" class="headerlink" title="自定义端口,编辑/var/lib/zerotier-one/local.conf"></a>自定义端口,编辑<code>/var/lib/zerotier-one/local.conf</code></h3><blockquote>
+<p>NAT映射的时候，内网和公网的端口需要一样</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;primaryPort&quot;: 10109</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="搭建Moon"><a href="#搭建Moon" class="headerlink" title="搭建Moon"></a>搭建Moon</h3><ol>
+<li>创建节点文件<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /var/lib/zerotier-one/</span><br><span class="line">zerotier-idtool initmoon identity.public &gt;&gt; moon.json</span><br></pre></td></tr></table></figure></li>
+<li>修改文件信息<code>moon.json</code>的<code>&quot;stableEndpoints&quot;</code>信息<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;stableEndpoints&quot;: [&quot;公网IP/端口&quot;]</span><br></pre></td></tr></table></figure></li>
+<li>生成节点文件<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">zerotier-idtool genmoon moon.json</span><br></pre></td></tr></table></figure></li>
+<li>启动<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mkdir moons.d</span><br><span class="line">mv 000000*.moon moons.d/</span><br><span class="line">systemctl restart zerotier-one</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1></li>
+</ol>
+<ul>
+<li><a href="https://www.zerotier.com/download/">Zerotier安装</a></li>
+<li><a href="https://docs.zerotier.com/zerotier/zerotier.conf/">Zerotier配置文档</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>VPS</category>
+      </categories>
+      <tags>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Nat-VPS动态IP搭建Zerotier-Moon</title>
+    <url>/pages/4e72e020/</url>
+    <content><![CDATA[<blockquote>
+<p>通过定时任务，不断轮训ip，对比ip是否变更，然后通过脚本更新moon节点文件，实现动态ip搭建moon节点</p>
+</blockquote>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Debian 11</li>
+</ul>
+<h2 id="网络测试"><a href="#网络测试" class="headerlink" title="网络测试"></a>网络测试</h2><blockquote>
+<p>使用前建议使用iperf3测试服务器端口映射是否有问题</p>
+</blockquote>
+<ol>
+<li>服务器<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">iperf3 -s -p 端口</span><br></pre></td></tr></table></figure></li>
+<li>客户端<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 测试tcp链接</span><br><span class="line">iperf3-darwin -c 服务器ip -b 7M -p 端口</span><br><span class="line"></span><br><span class="line"># 客户端发udp包，服务器端接收</span><br><span class="line">iperf3-darwin -u -c 服务器ip -b 7M -p 端口</span><br><span class="line"></span><br><span class="line"># 客户端接收，服务器端发udp包</span><br><span class="line">iperf3-darwin -u -c 服务器ip -b 7M -p 端口 -R</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="自定义端口"><a href="#自定义端口" class="headerlink" title="自定义端口"></a>自定义端口</h2><blockquote>
+<p>便于后面脚本截取ip做对比</p>
+</blockquote>
+<ul>
+<li><a href="/pages/3bdd7537/" title="Zerotier自定义端口">Zerotier自定义端口</a></li>
+</ul>
+<h2 id="服务器端"><a href="#服务器端" class="headerlink" title="服务器端"></a>服务器端</h2><h3 id="编辑脚本"><a href="#编辑脚本" class="headerlink" title="编辑脚本"></a>编辑脚本</h3><blockquote>
+<p>通过dns查询获取公网ip(或者curl获取)，对比本地配置文件，发现ip变更就更新moon节点文件</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line"># 通过dig获取公网ip，先检查截取的是否为ip</span><br><span class="line">ip=$(dig +short 域名 114.114.114.114 | tail -n 1)</span><br><span class="line"></span><br><span class="line"># 本地moon节点配置文件</span><br><span class="line">ip_file=&quot;/var/lib/zerotier-one/moon.json&quot;</span><br><span class="line"></span><br><span class="line"># 判断ip是否变更</span><br><span class="line">if [ -f $ip_file ]; then</span><br><span class="line">    # 截取moon.json文件ip字段</span><br><span class="line">    old_ip=$(awk -F&#x27;[][/]&#x27; &#x27;/&quot;stableEndpoints&quot;/ &#123;gsub(/&quot;/, &quot;&quot;, $2); print $2&#125;&#x27;  $ip_file)</span><br><span class="line">    if [ -n &quot;$old_ip&quot; ] &amp;&amp; [ $ip == $old_ip ]; then</span><br><span class="line">        echo &quot;IP has not changed.&quot;</span><br><span class="line">        exit 0</span><br><span class="line">    fi</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># 生成moon节点配置文件</span><br><span class="line">rm -rf $ip_file</span><br><span class="line">/usr/sbin/zerotier-idtool initmoon /var/lib/zerotier-one/identity.public &gt;&gt; $ip_file</span><br><span class="line"></span><br><span class="line"># 替换ip,生成节点文件，并重启。10109为自定义端口</span><br><span class="line">sed -i &#x27;/stableEndpoints/s/\[\]/\[\&quot;&#x27;$ip&#x27;\/10109\&quot;\]/g&#x27; $ip_file</span><br><span class="line">/usr/sbin/zerotier-idtool genmoon $ip_file</span><br><span class="line">mkdir /var/lib/zerotier-one/moons.d/</span><br><span class="line">cp 000000* /var/lib/zerotier-one/moons.d/</span><br><span class="line">systemctl restart zerotier-one</span><br><span class="line"></span><br><span class="line"># 可选，scp拉取文件路径</span><br><span class="line">#mv 000000* /scpread/usrname/download</span><br><span class="line">echo $ip </span><br></pre></td></tr></table></figure>
+<h3 id="开启定时执行-crontab-e"><a href="#开启定时执行-crontab-e" class="headerlink" title="开启定时执行,crontab -e"></a>开启定时执行,<code>crontab -e</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">* * * * * /root/.tool/zt_tool.sh &gt; /root/.tool/zt_log</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><h3 id="方法1：通过命令加入moon"><a href="#方法1：通过命令加入moon" class="headerlink" title="方法1：通过命令加入moon"></a>方法1：通过命令加入moon</h3><blockquote>
+<p>通过查询ip，和本地moons的ip对比，通过<code>zerotier-cli orbit</code> 加入moon</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line"># 通过dig获取公网ip，先检查截取的是否为ip</span><br><span class="line">ip=$(dig +short 域名 114.114.114.114 | tail -n 1)</span><br><span class="line">ip_file=&quot;/root/.tool/moons&quot;</span><br><span class="line"></span><br><span class="line"># 通过zerotier-cli命令，获取当前moons的信息</span><br><span class="line">docker exec zerotier zerotier-cli listmoons &gt; $ip_file</span><br><span class="line"></span><br><span class="line"># 对比ip是否变更</span><br><span class="line">if [ -f $ip_file ]; then</span><br><span class="line">    </span><br><span class="line">    # 截取文件ip字段，10109为自定义端口</span><br><span class="line">    old_ip=$(awk -F&#x27;/10109&quot;&#x27; &#x27;/10109&quot;/ &#123;gsub(/&quot;/, &quot;&quot;, $1);gsub(/ /, &quot;&quot;, $1); print $1&#125;&#x27;  $ip_file)</span><br><span class="line">    rm -rf $ip_file</span><br><span class="line">    if [ -n &quot;$old_ip&quot; ] &amp;&amp; [ $ip == $old_ip ]; then</span><br><span class="line">        echo &quot;IP has not changed.&quot;</span><br><span class="line">        exit 0</span><br><span class="line">    fi</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># ip变更了，通过命令行加入moon</span><br><span class="line">docker exec zerotier zerotier-cli deorbit xxxxxx </span><br><span class="line">docker exec zerotier zerotier-cli orbit xxxxxx xxxxxx</span><br><span class="line">echo $ip</span><br></pre></td></tr></table></figure>
+<h3 id="方法2：scp-sftp拉取moon节点文件"><a href="#方法2：scp-sftp拉取moon节点文件" class="headerlink" title="方法2：scp/sftp拉取moon节点文件"></a>方法2：scp/sftp拉取moon节点文件</h3><blockquote>
+<p>通过scp/sftp拉取服务器端moon节点文件，和本地节点文件对比，如果不同，就更新本地moon节点文件</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"># 定义moon节点文件路径</span><br><span class="line">old_moon=&quot;/mnt/disk/docker/zerotier-one/moons.d/000000xxxxxx.moon&quot;</span><br><span class="line">new_moon=&quot;./000000xxxxxx.moon&quot;</span><br><span class="line"></span><br><span class="line"># scp拉取文件</span><br><span class="line">#scp -i .ssh/id_rsa -P 端口 user@hostname:~/download/000000xxxxxx.moon ./</span><br><span class="line"></span><br><span class="line"># sftp拉取文件名</span><br><span class="line">sftp -i .ssh/id_rsa -P 端口  user@hostname &lt;&lt; EOF</span><br><span class="line">get download/000000xxxxxx.moon</span><br><span class="line">exit</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"># 检测文件是否已经拉取,并对比文件是否变更</span><br><span class="line">if [ -f $new_moon ]; then</span><br><span class="line">    if [ -f $old_moon ]; then</span><br><span class="line">        result=$(cmp $old_moon $new_moon)</span><br><span class="line">        # 对比结果为空，说明文件没有变更</span><br><span class="line">        if [ -z &quot;$result&quot; ]; then</span><br><span class="line">            echo &quot;file has not changed.&quot;</span><br><span class="line">            rm $new_moon</span><br><span class="line">            exit 0</span><br><span class="line">        fi</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    # 执行更新操作</span><br><span class="line">    echo &quot;file has changed.&quot;</span><br><span class="line">    mv $new_moon $old_moon</span><br><span class="line">    docker restart zerotier</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<h3 id="配置只读scp-sftp-可选"><a href="#配置只读scp-sftp-可选" class="headerlink" title="配置只读scp/sftp(可选)"></a>配置只读scp/sftp(可选)</h3><blockquote>
+<p>禁止ssh登录，只开启scp/sftp</p>
+</blockquote>
+<ol>
+<li>添加禁止登录用户<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加用户</span><br><span class="line">useradd -d /scpread/usrname -s /sbin/nologin usrname</span><br><span class="line"></span><br><span class="line"># 修改密码</span><br><span class="line">passwd usrname</span><br><span class="line"></span><br><span class="line"># 创建用户文件夹</span><br><span class="line">mkdir -p /scpread/usrname</span><br></pre></td></tr></table></figure></li>
+<li>添加ssh key校验<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建文件夹和文件</span><br><span class="line">mkdir /scpread/usrname/.ssh</span><br><span class="line">vim /scpread/usrname/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line"># 设置权限</span><br><span class="line">chown usrname:usrname /scpread/usrname/.ssh/</span><br><span class="line">chown usrname:usrname /scpread/usrname/.ssh/authorized_keys</span><br></pre></td></tr></table></figure></li>
+<li>修改sshd配置文件<code>/etc/ssh/sshd_config</code><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#Subsystem	sftp	/usr/lib/openssh/sftp-server</span><br><span class="line">Subsystem sftp internal-sftp</span><br><span class="line">Match User usrname</span><br><span class="line">    ChrootDirectory /scpread/usrname</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="开启定时执行-crontab-e-1"><a href="#开启定时执行-crontab-e-1" class="headerlink" title="开启定时执行,crontab -e"></a>开启定时执行,<code>crontab -e</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">* * * * * /root/.tool/zt_moons.sh &gt; /root/.tool/zt_log</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://blog.csdn.net/weixin_36065860/article/details/105369592">禁止ssh登录开启scp/sftp</a></li>
+<li><a href="https://www.right.com.cn/forum/forum.php?mod=viewthread&tid=8257974&page=1#pid17610167">zerotier moon自动更新脚本</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>VPS</category>
+      </categories>
+      <tags>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>iOS MapBox v10(一) 本地化/无网使用</title>
+    <url>/pages/236c4326/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Mapbox v10.5.0</li>
+<li>Xcode 14.3.1</li>
+</ul>
+<h2 id="自定义配置文件启动"><a href="#自定义配置文件启动" class="headerlink" title="自定义配置文件启动"></a>自定义配置文件启动</h2><p>mapbox的默认初始化会调用<code>mapbox://styles/mapbox/streets-v11</code>类似的链接，实际启动后，会通过网络获取在线的json格式的配置文件，我们需要在本地自定义一份配置文件用于初始化，具体参数可以参考<a href="https://docs.mapbox.com/mapbox-gl-js/style-spec/root/">Style Specification</a></p>
+<blockquote>
+<p>这里删除了<code>sprite</code>是定义在线图片，我们不需要在线图片；删除<code>glyphs</code>是定义在线字体，当<code>glyphs</code>在线数据没有加载出来的时候。会导致<code>SymbolLayer</code>图层不会刷新数据。</p>
+</blockquote>
+<figure class="highlight json"><figcaption><span>mapbox.json</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="number">8</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;local-mapbox&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sources&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;raster-tiles-source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;raster&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;tiles&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;https://a.basemaps.cartocdn.com/light_nolabels/&#123;z&#125;/&#123;x&#125;/&#123;y&#125;.png&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;tileSize&quot;</span><span class="punctuation">:</span><span class="number">256</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;layers&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;raster-tiles-layer&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;raster&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;source&quot;</span><span class="punctuation">:</span> <span class="string">&quot;raster-tiles-source&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="加载本地字体方式"><a href="#加载本地字体方式" class="headerlink" title="加载本地字体方式"></a>加载本地字体方式</h3><ol>
+<li>通过初始化<code>MapOptions</code>类，加载本地字体，详情查看下面章节</li>
+<li>下载全部字体包，然后添加<code>glyphs</code>字段，定义到本地路径<code>file://</code>或者资源文件路径<code>asset://</code></li>
+</ol>
+<h2 id="使用本地配置文件初始化"><a href="#使用本地配置文件初始化" class="headerlink" title="使用本地配置文件初始化"></a>使用本地配置文件初始化</h2><p>初始化的的时候，我们自定义本地字体，一定要手动指定字体，不然在不同的版本系统上，显示会不一样</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义本地字体</span></span><br><span class="line"><span class="keyword">let</span> font <span class="operator">=</span> <span class="type">UIFont</span>.systemFont(ofSize: <span class="number">0</span>,weight: .regular).familyName</span><br><span class="line"><span class="keyword">let</span> mapOptions <span class="operator">=</span> <span class="type">MapOptions</span>(glyphsRasterizationOptions: <span class="type">GlyphsRasterizationOptions</span>(rasterizationMode: .allGlyphsRasterizedLocally, fontFamily: font))</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义本地配置文件路径</span></span><br><span class="line"><span class="keyword">let</span> mapInitOptions <span class="operator">=</span> <span class="type">MapInitOptions</span>(styleURI: <span class="type">StyleURI</span>(url:<span class="type">Bundle</span>.main.url(forResource: <span class="string">&quot;mapbox&quot;</span>, withExtension: <span class="string">&quot;json&quot;</span>)<span class="operator">!</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化</span></span><br><span class="line">mapView <span class="operator">=</span> <span class="type">MapView</span>(frame: <span class="type">UIScreen</span>.main.bounds, mapInitOptions: mapInitOptions)</span><br><span class="line">mapView.autoresizingMask <span class="operator">=</span> [.flexibleWidth, .flexibleHeight]</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Mapbox</category>
+      </categories>
+      <tags>
+        <tag>Mapbox</tag>
+        <tag>Swift</tag>
+        <tag>iOS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>iOS MapBox v10(二)修改矢量图形的几种方法</title>
+    <url>/pages/5f5a1e84/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Mapbox v10.5.0</li>
+<li>Xcode 14.3.1</li>
+</ul>
+<h2 id="基础的图形显示"><a href="#基础的图形显示" class="headerlink" title="基础的图形显示"></a>基础的图形显示</h2><h3 id="标准的geojson矢量文件"><a href="#标准的geojson矢量文件" class="headerlink" title="标准的geojson矢量文件"></a>标准的geojson矢量文件</h3><blockquote>
+<p>在线生成展示geojson地址 <a href="https://geojson.io/#map=2/20/0">https://geojson.io</a></p>
+</blockquote>
+<figure class="highlight json"><figcaption><span>shape</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;FeatureCollection&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Feature&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;geometry&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;coordinates&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">[</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">116.4578773269638</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">61.068686560065515</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">115.78931543914507</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">60.457089046558025</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">116.776240130686</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">60.58242789052406</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">116.4578773269638</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">61.068686560065515</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">          <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Polygon&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="通过线和面显示多边形"><a href="#通过线和面显示多边形" class="headerlink" title="通过线和面显示多边形"></a>通过线和面显示多边形</h3><blockquote>
+<p>layer和source的添加，需要通过初始化json添加，或者在地图加载完毕后，再通过函数添加</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义图层和数据源唯一id</span></span><br><span class="line"><span class="keyword">let</span> sourceId <span class="operator">=</span> <span class="string">&quot;source&quot;</span></span><br><span class="line"><span class="keyword">let</span> fillId <span class="operator">=</span> <span class="string">&quot;layer-fill&quot;</span></span><br><span class="line"><span class="keyword">let</span> lineId <span class="operator">=</span> <span class="string">&quot;laayer-line&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> source <span class="operator">=</span> <span class="type">GeoJSONSource</span>()</span><br><span class="line">source.data <span class="operator">=</span> .empty</span><br><span class="line"><span class="keyword">try?</span> mapView.mapboxMap.style.addSource(source, id: sourceId)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加面</span></span><br><span class="line"><span class="keyword">var</span> shapeFill  <span class="operator">=</span> <span class="type">FillLayer</span>(id: fillId)</span><br><span class="line">shapeFill.fillColor <span class="operator">=</span> .constant(<span class="type">StyleColor</span>(.red.withAlphaComponent(<span class="number">0.5</span>)))</span><br><span class="line">shapeFill.source <span class="operator">=</span> sourceId</span><br><span class="line"><span class="keyword">try?</span> mapView.mapboxMap.style.addLayer(shapeFill)</span><br><span class="line"></span><br><span class="line"><span class="comment">//添加线</span></span><br><span class="line"><span class="keyword">var</span> shapeLine  <span class="operator">=</span> <span class="type">LineLayer</span>(id: lineId)</span><br><span class="line">shapeLine.source <span class="operator">=</span> sourceId</span><br><span class="line">shapeLine.lineColor <span class="operator">=</span> .constant(<span class="type">StyleColor</span>(.red))</span><br><span class="line">shapeLine.lineWidth <span class="operator">=</span> .constant(<span class="number">2</span>)</span><br><span class="line"><span class="keyword">try?</span> mapView.mapboxMap.style.addLayer(shapeLine)</span><br><span class="line"></span><br><span class="line"><span class="comment">//赋值图形数据</span></span><br><span class="line"><span class="keyword">let</span> geojson <span class="operator">=</span> <span class="operator">...</span> <span class="comment">//上面标准json字符串</span></span><br><span class="line"><span class="keyword">try?</span> mapView.mapboxMap.style.setSourceProperty(for: sourceId, property: <span class="string">&quot;data&quot;</span>, value: geojson)</span><br></pre></td></tr></table></figure>
+
+<h2 id="动态修改图形样式（表达式）"><a href="#动态修改图形样式（表达式）" class="headerlink" title="动态修改图形样式（表达式）"></a>动态修改图形样式（表达式）</h2><blockquote>
+<p>相关表达式参考 <a href="https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/">STYLE SPECIFICATION</a></p>
+</blockquote>
+<h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><p>通过json包含颜色，表达式读取属性,添加颜色属性 <code>color</code></p>
+<figure class="highlight json"><figcaption><span>shape</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;FeatureCollection&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Feature&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;fillcolor&quot;</span><span class="punctuation">:</span> <span class="string">&quot;rgba(255,0,0,0.5)&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;linecolor&quot;</span><span class="punctuation">:</span> <span class="string">&quot;rgba(255,0,0,1)&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;geometry&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;coordinates&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">[</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">116.4578773269638</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">61.068686560065515</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">115.78931543914507</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">60.457089046558025</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">116.776240130686</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">60.58242789052406</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">116.4578773269638</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">61.068686560065515</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">          <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Polygon&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>修改显示代码</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shapeFill.fillColor = .expression(Exp(.get)&#123; &quot;fillcolor&quot; &#125;)</span><br><span class="line">shapeLine.lineColor = .expression(Exp(.get)&#123; &quot;linecolor&quot; &#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><p>通过表达式判断图形属性，修改颜色</p>
+<figure class="highlight json"><figcaption><span>shape</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;FeatureCollection&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Feature&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;123456&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;geometry&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;coordinates&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">[</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">116.4578773269638</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">61.068686560065515</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">115.78931543914507</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">60.457089046558025</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">116.776240130686</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">60.58242789052406</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">[</span></span><br><span class="line">              <span class="number">116.4578773269638</span><span class="punctuation">,</span></span><br><span class="line">              <span class="number">61.068686560065515</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">          <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Polygon&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>修改显示代码,选中显示颜色<code>rgba(255,255,0,0.5)</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">let selectIds = [&quot;123456&quot;]</span><br><span class="line">let selExp:[Any] = [&quot;in&quot;, [&quot;id&quot;], [&quot;literal&quot;, selectIds] as [Any]]</span><br><span class="line">let fillcolor:[Any] = [&quot;case&quot;,</span><br><span class="line">                        [&quot;==&quot;, selExp,true] as [Any], &quot;rgba(255,255,0,0.5)&quot;,</span><br><span class="line">                        &quot;rgba(255,0,0,0.5)&quot;</span><br><span class="line">                      ]</span><br><span class="line">let linecolor:[Any] = [&quot;case&quot;,</span><br><span class="line">                        [&quot;==&quot;, selExp,true] as [Any], &quot;rgba(255,255,0,1)&quot;,</span><br><span class="line">                        &quot;rgba(255,0,0,1)&quot;</span><br><span class="line">                      ]</span><br><span class="line">try? mapView.mapboxMap.style.setLayerProperty(for:fillId , property: &quot;fill-color&quot;, value:fillcolor)</span><br><span class="line">try? mapView.mapboxMap.style.setLayerProperty(for:lineId , property: &quot;line-color&quot;, value:linecolor)</span><br></pre></td></tr></table></figure>
+<h2 id="通过feature-state属性修改图形样式"><a href="#通过feature-state属性修改图形样式" class="headerlink" title="通过feature-state属性修改图形样式"></a>通过<code>feature-state</code>属性修改图形样式</h2><blockquote>
+<p>修改需要基于<code>&quot;id&quot;</code>修改</p>
+</blockquote>
+<p>修改显示代码</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shapeFill.fillColor = .expression(Exp(.featureState)&#123; &quot;fillcolor&quot; &#125;)</span><br><span class="line">shapeLine.lineColor = .expression(Exp(.featureState)&#123; &quot;linecolor&quot; &#125;)</span><br></pre></td></tr></table></figure>
+<p>动态修改<code>feature-state</code>属性</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mapView.mapboxMap.setFeatureState(sourceId: sourceId, featureId: &quot;123456&quot;, state: [&quot;fillcolor&quot;: &quot;rgba(255,0,0,0.5)&quot;,&quot;linecolor&quot;: &quot;rgba(255,0,0,1)&quot;])</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Mapbox</category>
+      </categories>
+      <tags>
+        <tag>Mapbox</tag>
+        <tag>Swift</tag>
+        <tag>iOS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>iOS MapBox v10(三)iconOffset/iconTranslate/textOffset/textTranslate的区别</title>
+    <url>/pages/256e231d/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Mapbox v10.5.0</li>
+<li>Xcode 14.3.1</li>
+</ul>
+<h2 id="SymbolLayer参数说明"><a href="#SymbolLayer参数说明" class="headerlink" title="SymbolLayer参数说明"></a>SymbolLayer参数说明</h2><h3 id="iconOffset"><a href="#iconOffset" class="headerlink" title="iconOffset"></a>iconOffset</h3><blockquote>
+<p>图标和锚点都会偏移，而已还会根据<code>iconSize</code>改变大小，例如<code>iconOffset</code>为<code>[10,20]</code>,<code>iconSize</code>为<code>0.5</code>,则实际偏移显示为<code>[5,10]</code></p>
+</blockquote>
+<h3 id="iconTranslate"><a href="#iconTranslate" class="headerlink" title="iconTranslate"></a>iconTranslate</h3><blockquote>
+<p>根据标点位置偏移,锚点不偏移，而且不受<code>iconSize</code>影响</p>
+</blockquote>
+<h3 id="textOffset"><a href="#textOffset" class="headerlink" title="textOffset"></a>textOffset</h3><blockquote>
+<p>图标和锚点都会偏移,偏移单位为<code>em</code>，<code>em</code>即n倍字体高度，如果字体高度为<code>16px</code>,则<code>1em=16px</code>，具体请搜索<code>css em 单位</code></p>
+</blockquote>
+<h3 id="textTranslate"><a href="#textTranslate" class="headerlink" title="textTranslate"></a>textTranslate</h3><blockquote>
+<p>根据标点位置偏移,锚点不偏移</p>
+</blockquote>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a href="https://docs.mapbox.com/ios/maps/api/10.15.0/Structs/SymbolLayer.html">SymbolLayer</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Mapbox</category>
+      </categories>
+      <tags>
+        <tag>Mapbox</tag>
+        <tag>Swift</tag>
+        <tag>iOS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>iOS MapBox v10(四)HttpServiceInterface/HttpServiceInterceptorInterface拦截修改网络请求</title>
+    <url>/pages/b082fa33/</url>
+    <content><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Mapbox v10.5.0</li>
+<li>Xcode 14.3.1</li>
+</ul>
+<h2 id="HttpServiceInterface自定义网络请求"><a href="#HttpServiceInterface自定义网络请求" class="headerlink" title="HttpServiceInterface自定义网络请求"></a>HttpServiceInterface自定义网络请求</h2><h3 id="设置网络请求类"><a href="#设置网络请求类" class="headerlink" title="设置网络请求类"></a>设置网络请求类</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MapboxCommon.HttpServiceFactory.setUserDefinedForCustom(HttpServiceInterface)</span><br></pre></td></tr></table></figure>
+<h3 id="实现网络请求类"><a href="#实现网络请求类" class="headerlink" title="实现网络请求类"></a>实现网络请求类</h3><p><code>MapboxCommon.HttpServiceFactory.getInstance()</code>返回的是自定义请求类，所以不能直接返回网络请求</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class CustomHttpServiceInterface:HttpServiceInterface&#123;</span><br><span class="line">    public func setInterceptorForInterceptor(_ interceptor: HttpServiceInterceptorInterface?) &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public func setMaxRequestsPerHostForMax(_ max: UInt8) &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public func request(for request: HttpRequest, callback: @escaping HttpResponseCallback) -&gt; UInt64 &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public func cancelRequest(forId id: UInt64, callback: @escaping ResultCallback) &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public func supportsKeepCompression() -&gt; Bool &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public func download(for options: DownloadOptions, callback: @escaping DownloadStatusCallback) -&gt; UInt64 &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="HttpServiceInterceptorInterface拦截修改网络请求"><a href="#HttpServiceInterceptorInterface拦截修改网络请求" class="headerlink" title="HttpServiceInterceptorInterface拦截修改网络请求"></a>HttpServiceInterceptorInterface拦截修改网络请求</h2><h3 id="设置网络请求代理"><a href="#设置网络请求代理" class="headerlink" title="设置网络请求代理"></a>设置网络请求代理</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MapboxCommon.HttpServiceFactory.getInstance().setInterceptorForInterceptor(HttpServiceInterceptorInterface)</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现网络请求代理"><a href="#实现网络请求代理" class="headerlink" title="实现网络请求代理"></a>实现网络请求代理</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class HttpServiceHack:HttpServiceInterceptorInterface&#123;</span><br><span class="line">    public func onRequest(for request: HttpRequest) -&gt; HttpRequest &#123;</span><br><span class="line">        //修改请求</span><br><span class="line">        return request</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public func onDownload(forDownload download: DownloadOptions) -&gt; DownloadOptions &#123;</span><br><span class="line">        return download</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public func onResponse(for response: HttpResponse) -&gt; HttpResponse &#123;</span><br><span class="line">        //修改返回</span><br><span class="line">        return response</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="N个瓦片涂层合并"><a href="#N个瓦片涂层合并" class="headerlink" title="N个瓦片涂层合并"></a>N个瓦片涂层合并</h2><h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>N个本地地图包和M个在线地图包链接，根据时间叠加，显示为一个layer图层</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><ol>
+<li>自定义<code>local:///localtiles?x=&#123;x&#125;&amp;y=&#123;y&#125;&amp;z=&#123;y&#125;</code>链接标识 (这里不能使用<code>file:///</code>，因为不能拦截)</li>
+<li>修改设置<code>HttpServiceInterceptorInterface</code>，在<code>onRequest</code>中修改<code>HttpRequest</code>到本地文件链接，或者在前请求图片保存为本地后，再设置本地文件链接</li>
+<li>因为本地图片请求，返回码是<code>0</code>，所以需要在<code>onResponse</code>中将，将返回码设置为<code>200</code><h3 id="其他实现方式"><a href="#其他实现方式" class="headerlink" title="其他实现方式"></a>其他实现方式</h3>使用第三方库<code>GCDWebServer</code>，作为中间人，进行请求拦截，自定义返回</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Mapbox</category>
+      </categories>
+      <tags>
+        <tag>Mapbox</tag>
+        <tag>Swift</tag>
+        <tag>iOS</tag>
+      </tags>
+  </entry>
+</search>
