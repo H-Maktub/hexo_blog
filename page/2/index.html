@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Maktub_Blog</title><meta name="author" content="Maktub_小明"><meta name="copyright" content="Maktub_小明"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta property="og:type" content="website">
+<meta property="og:title" content="Maktub_Blog">
+<meta property="og:url" content="https://blog.maktub.cn/page/2/index.html">
+<meta property="og:site_name" content="Maktub_Blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.maktub.cn/uploads/avatar.jpg">
+<meta property="article:author" content="Maktub_小明">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.maktub.cn/uploads/avatar.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="../../uploads/avatar.jpg"><link rel="canonical" href="https://blog.maktub.cn/page/2/index.html"><link rel="preconnect"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="../../css/index.css"><link rel="stylesheet" href="../../pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-ZKKH7RF2CP"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', 'G-ZKKH7RF2CP')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', 'G-ZKKH7RF2CP', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: '../pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Maktub_Blog',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><link rel="stylesheet" href="/uploads/butterfly/width.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="../uploads/avatar.jpg" onerror="this.onerror=null;this.src='../img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="../archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="../tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="../index.html"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="../archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="../tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="../categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="../about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="../../index.html"><img class="site-icon" src="../../uploads/avatar.jpg" alt="Logo"><span class="site-name">Maktub_Blog</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="../index.html"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="../archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="../tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="../categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="../about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><h1 class="title-seo">Maktub_Blog</h1></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="post_cover"><a href="../../pages/230dbe43/" title="部署/cppla/ServerStatus探针"><img class="post-bg" src="https://bing.img.run/rand_1366x768.php?random=9" onerror="this.onerror=null;this.src='../../img/404.jpg'" alt="部署/cppla/ServerStatus探针"></a></div><div class="recent-post-info"><a class="article-title" href="../../pages/230dbe43/" title="部署/cppla/ServerStatus探针">部署/cppla/ServerStatus探针</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-01-05T14:13:55.000Z" title="发表于 2023-01-05 22:13:55">2023-01-05</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-01-07T08:18:12.000Z" title="更新于 2023-01-07 16:18:12">2023-01-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="../../categories/VPS/">VPS</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="../../tags/VPS/">VPS</a></span></div><div class="content">开源项目地址 ServerStatus  部署服务器端 安装服务  1docker run -d --restart=always --name=serverstatus -v /root/.docker/serverstatus/serverstatus-config.json:/ServerStatus/server/config.json -v /root/.docker/serverstatus/serverstatus-monthtraffic:/usr/share/nginx/html/json -p 127.0.0.1:8080:80 -p 35601:35601 cppla/serverstatus   配置服务器文件，/root/.docker/serverstatus/serverstatus-config.json  123456789101112131415161718192021222324252627282930313233343536373839&#123;    &quot;servers&quot;: [        &#123;       ...</div></div></div><div class="recent-post-item"><div class="post_cover"><a href="../../pages/57a9596a/" title="shell命令行管理vps"><img class="post-bg" src="https://bing.img.run/rand_1366x768.php?random=1" onerror="this.onerror=null;this.src='../../img/404.jpg'" alt="shell命令行管理vps"></a></div><div class="recent-post-info"><a class="article-title" href="../../pages/57a9596a/" title="shell命令行管理vps">shell命令行管理vps</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-12-11T06:17:59.000Z" title="发表于 2022-12-11 14:17:59">2022-12-11</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-12-11T06:17:59.000Z" title="更新于 2022-12-11 14:17:59">2022-12-11</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="../../categories/VPS/">VPS</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="../../tags/VPS/">VPS</a></span></div><div class="content">脚本 sshmgr.sh123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778#!/bin/bashconf=/Users/h/Tool/sshmgr.confset sshname=set sshhost=menu() &#123;    while read line    do        if [ &quot;$&#123;line:0:1&#125;&quot; == &quot;#&quot; ];then            continue        fi        if [ &quot;$&#123;line&#125;z&quot; == &quot;z&quot; ];then            continue        fi        if [ &quot;$&#123;line:0:2&#12...</div></div></div><div class="recent-post-item"><div class="post_cover"><a href="../../pages/4209dbe0/" title="Scascaleway 自动开机脚本"><img class="post-bg" src="https://bing.img.run/rand_1366x768.php?random=3" onerror="this.onerror=null;this.src='../../img/404.jpg'" alt="Scascaleway 自动开机脚本"></a></div><div class="recent-post-info"><a class="article-title" href="../../pages/4209dbe0/" title="Scascaleway 自动开机脚本">Scascaleway 自动开机脚本</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-12-07T03:24:39.000Z" title="发表于 2022-12-07 11:24:39">2022-12-07</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-12-07T03:24:39.000Z" title="更新于 2022-12-07 11:24:39">2022-12-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="../../categories/VPS/">VPS</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="../../tags/VPS/">VPS</a></span></div><div class="content">环境 MACOS  安装1brew install scw  创建虚拟机1234567891011# 登录scw init# 创建服务器scw instance server create type=STARDUST1-S zone=fr-par-1 image=debian_bullseye root-volume=l:10G name=Denian ip=none ipv6=true project-id=你的账号UUID# 查看服务器scw instance server list# 开机scw instance server start 你的机器UUID  开机脚本12345678910111213141516171819202122232425#!/bin/zshMACHINE_UUID=&quot;你的机器UUID&quot;STAR_MACHINE() &#123;    scw instance server start &quot;$&#123;MACHINE_UUID&#125;&quot;&#125;SEND_NOTIFY()&#123;	echo &quo...</div></div></div><div class="recent-post-item"><div class="post_cover"><a href="../../pages/435fe954/" title="纯ipv6 vps 套cf wrap拥有ipv4的访问能力"><img class="post-bg" src="https://bing.img.run/rand_1366x768.php?random=6" onerror="this.onerror=null;this.src='../../img/404.jpg'" alt="纯ipv6 vps 套cf wrap拥有ipv4的访问能力"></a></div><div class="recent-post-info"><a class="article-title" href="../../pages/435fe954/" title="纯ipv6 vps 套cf wrap拥有ipv4的访问能力">纯ipv6 vps 套cf wrap拥有ipv4的访问能力</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-12-07T02:27:53.000Z" title="发表于 2022-12-07 10:27:53">2022-12-07</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-12-07T02:27:53.000Z" title="更新于 2022-12-07 10:27:53">2022-12-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="../../categories/VPS/">VPS</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="../../tags/VPS/">VPS</a></span></div><div class="content"> 感谢Cloudflare的免费服务，大家合理使用  安装wireguard1apt install wireguard-tools  安装wgfc12345678# 安装 wgcfcurl -fsSL git.io/wgcf.sh | sudo bash# 注册wgcf register# 生成配置wgcf generate  配置和启动 修改配置文件  123456789101112131415161718[Interface]PrivateKey = MKAskClhM858SHhlrCHG0HRgWaEIhLslJYuxOV9Ct30=Address = 自动生成Address = 自动生成DNS = 2001:4860:4860::8888,2001:4860:4860::8844,8.8.8.8,8.8.4.4MTU = 1280#ipv4#PostUp = ip -4 rule add from 本地ipv4 lookup main#PostDown = ip -4 rule delete from 本地ipv4 lookup mainPostUp = ip -6 ...</div></div></div><div class="recent-post-item"><div class="post_cover"><a href="../../pages/78e7ed04/" title="32M内存ipv6运行v2ray套cf cdn"><img class="post-bg" src="https://bing.img.run/rand_1366x768.php?random=7" onerror="this.onerror=null;this.src='../../img/404.jpg'" alt="32M内存ipv6运行v2ray套cf cdn"></a></div><div class="recent-post-info"><a class="article-title" href="../../pages/78e7ed04/" title="32M内存ipv6运行v2ray套cf cdn">32M内存ipv6运行v2ray套cf cdn</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-28T14:14:45.000Z" title="发表于 2022-11-28 22:14:45">2022-11-28</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-28T14:14:45.000Z" title="更新于 2022-11-28 22:14:45">2022-11-28</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="../../categories/VPS/">VPS</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="../../tags/VPS/">VPS</a></span></div><div class="content">环境 alpine 3.16  V2ray 安装  12345678#安装apk add v2ray#开机启动rc-update add v2ray#启动rc-service v2ray   配置/etc/v2ray/config.json  1234567891011121314151617181920212223242526272829&#123;  &quot;inbounds&quot;: [    &#123;      &quot;port&quot;: 80,      &quot;listen&quot;:&quot;::&quot;,      &quot;protocol&quot;: &quot;vmess&quot;,      &quot;settings&quot;: &#123;        &quot;clients&quot;: [          &#123;            &quot;id&quot;: &quot;#自己生成uuid&quot;,            &quot;alterId&quot;: 0        ...</div></div></div><div class="recent-post-item"><div class="post_cover"><a href="../../pages/d20bb833/" title="手动搭建vmess+ws+tls(V2ray+Caddy)"><img class="post-bg" src="https://bing.img.run/rand_1366x768.php?random=4" onerror="this.onerror=null;this.src='../../img/404.jpg'" alt="手动搭建vmess+ws+tls(V2ray+Caddy)"></a></div><div class="recent-post-info"><a class="article-title" href="../../pages/d20bb833/" title="手动搭建vmess+ws+tls(V2ray+Caddy)">手动搭建vmess+ws+tls(V2ray+Caddy)</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-28T13:32:08.000Z" title="发表于 2022-11-28 21:32:08">2022-11-28</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-28T13:32:08.000Z" title="更新于 2022-11-28 21:32:08">2022-11-28</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="../../categories/VPS/">VPS</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="../../tags/VPS/">VPS</a></span></div><div class="content">V2Ray 安装  1bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)   配置/usr/local/etc/v2ray/config.json  1234567891011121314151617181920212223242526272829&#123;  &quot;inbounds&quot;: [    &#123;      &quot;port&quot;: 10000,      &quot;listen&quot;:&quot;127.0.0.1&quot;,      &quot;protocol&quot;: &quot;vmess&quot;,      &quot;settings&quot;: &#123;        &quot;clients&quot;: [          &#123;            &quot;id&quot;: &quot;#自己生成uuid&quot;,  ...</div></div></div><div class="recent-post-item"><div class="post_cover"><a href="../../pages/1e41147d/" title="拯救被墙ip-vmess+ws+tls套cf+cdn"><img class="post-bg" src="https://bing.img.run/rand_1366x768.php?random=9" onerror="this.onerror=null;this.src='../../img/404.jpg'" alt="拯救被墙ip-vmess+ws+tls套cf+cdn"></a></div><div class="recent-post-info"><a class="article-title" href="../../pages/1e41147d/" title="拯救被墙ip-vmess+ws+tls套cf+cdn">拯救被墙ip-vmess+ws+tls套cf+cdn</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-08T13:10:27.000Z" title="发表于 2022-11-08 21:10:27">2022-11-08</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-08T13:10:27.000Z" title="更新于 2022-11-08 21:10:27">2022-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="../../categories/VPS/">VPS</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="../../tags/VPS/">VPS</a></span></div><div class="content">一键安装脚本 V2Ray_ws-tls_bash_onekey  注册cloudflare 域名配置dns 控制面板DNS配置域名A解析 控制面板SSL/TLS设置为Full(strict)  免费域名注册 Freenom  遇到的问题 Git: Failed sending HTTP2 data solution  1sudo apt reinstall libcurl3-gnutls/buster  </div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="../../"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="../../">1</a><span class="page-number current">2</span><a class="page-number" href="../3/#content-inner">3</a><a class="page-number" href="../4/#content-inner">4</a><a class="extend next" rel="next" href="../3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="../uploads/avatar.jpg" onerror="this.onerror=null;this.src='../img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Maktub_小明</div><div class="author-info-description"></div><div class="site-data"><a href="../archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="../tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://www.maktub.cn/"><i class="fab fa-github"></i><span>主站点</span></a></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="../pages/b082fa33/" title="iOS MapBox v10(四)HttpServiceInterface/HttpServiceInterceptorInterface拦截修改网络请求"><img src="https://bing.img.run/rand_1366x768.php?random=6" onerror="this.onerror=null;this.src='../img/404.jpg'" alt="iOS MapBox v10(四)HttpServiceInterface/HttpServiceInterceptorInterface拦截修改网络请求"/></a><div class="content"><a class="title" href="../pages/b082fa33/" title="iOS MapBox v10(四)HttpServiceInterface/HttpServiceInterceptorInterface拦截修改网络请求">iOS MapBox v10(四)HttpServiceInterface/HttpServiceInterceptorInterface拦截修改网络请求</a><time datetime="2023-09-02T07:49:15.000Z" title="发表于 2023-09-02 15:49:15">2023-09-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="../pages/256e231d/" title="iOS MapBox v10(三)iconOffset/iconTranslate/textOffset/textTranslate的区别"><img src="https://bing.img.run/rand_1366x768.php?random=8" onerror="this.onerror=null;this.src='../img/404.jpg'" alt="iOS MapBox v10(三)iconOffset/iconTranslate/textOffset/textTranslate的区别"/></a><div class="content"><a class="title" href="../pages/256e231d/" title="iOS MapBox v10(三)iconOffset/iconTranslate/textOffset/textTranslate的区别">iOS MapBox v10(三)iconOffset/iconTranslate/textOffset/textTranslate的区别</a><time datetime="2023-08-12T07:05:36.000Z" title="发表于 2023-08-12 15:05:36">2023-08-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="../pages/5f5a1e84/" title="iOS MapBox v10(二)修改矢量图形的几种方法"><img src="https://bing.img.run/rand_1366x768.php?random=4" onerror="this.onerror=null;this.src='../img/404.jpg'" alt="iOS MapBox v10(二)修改矢量图形的几种方法"/></a><div class="content"><a class="title" href="../pages/5f5a1e84/" title="iOS MapBox v10(二)修改矢量图形的几种方法">iOS MapBox v10(二)修改矢量图形的几种方法</a><time datetime="2023-08-05T03:09:55.000Z" title="发表于 2023-08-05 11:09:55">2023-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="../pages/236c4326/" title="iOS MapBox v10(一) 本地化/无网使用"><img src="https://bing.img.run/rand_1366x768.php?random=3" onerror="this.onerror=null;this.src='../img/404.jpg'" alt="iOS MapBox v10(一) 本地化/无网使用"/></a><div class="content"><a class="title" href="../pages/236c4326/" title="iOS MapBox v10(一) 本地化/无网使用">iOS MapBox v10(一) 本地化/无网使用</a><time datetime="2023-07-30T04:41:40.000Z" title="发表于 2023-07-30 12:41:40">2023-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="../pages/4e72e020/" title="Nat-VPS动态IP搭建Zerotier-Moon"><img src="https://bing.img.run/rand_1366x768.php?random=7" onerror="this.onerror=null;this.src='../img/404.jpg'" alt="Nat-VPS动态IP搭建Zerotier-Moon"/></a><div class="content"><a class="title" href="../pages/4e72e020/" title="Nat-VPS动态IP搭建Zerotier-Moon">Nat-VPS动态IP搭建Zerotier-Moon</a><time datetime="2023-07-08T15:03:00.000Z" title="发表于 2023-07-08 23:03:00">2023-07-08</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="Mapbox/"><span class="card-category-list-name">Mapbox</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="VPS/"><span class="card-category-list-name">VPS</span><span class="card-category-list-count">9</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="%E8%BD%AF%E8%B7%AF%E7%94%B1/"><span class="card-category-list-name">软路由</span><span class="card-category-list-count">15</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="../tags/openwrt/" style="font-size: 1.3em; color: #99a1ac">openwrt</a> <a href="../tags/Swift/" style="font-size: 1.4em; color: #99a5b6">Swift</a> <a href="../tags/DDNS/" style="font-size: 1.1em; color: #999">DDNS</a> <a href="../tags/zerotier/" style="font-size: 1.1em; color: #999">zerotier</a> <a href="../tags/VPS/" style="font-size: 1.5em; color: #99a9bf">VPS</a> <a href="../tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/" style="font-size: 1.1em; color: #999">黑苹果</a> <a href="../tags/kvm/" style="font-size: 1.2em; color: #999da3">kvm</a> <a href="../tags/Plex/" style="font-size: 1.1em; color: #999">Plex</a> <a href="../tags/nftables/" style="font-size: 1.1em; color: #999">nftables</a> <a href="../tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 1.1em; color: #999">树莓派</a> <a href="../tags/iOS/" style="font-size: 1.4em; color: #99a5b6">iOS</a> <a href="../tags/Mapbox/" style="font-size: 1.4em; color: #99a5b6">Mapbox</a> <a href="../tags/PVE/" style="font-size: 1.1em; color: #999">PVE</a> <a href="../tags/big-sur/" style="font-size: 1.1em; color: #999">big sur</a> <a href="../tags/RouterOS/" style="font-size: 1.1em; color: #999">RouterOS</a> <a href="../tags/shadowsock/" style="font-size: 1.2em; color: #999da3">shadowsock</a> <a href="../tags/HomeAssistant/" style="font-size: 1.1em; color: #999">HomeAssistant</a> <a href="../tags/Openwrt/" style="font-size: 1.1em; color: #999">Openwrt</a> <a href="../tags/%E9%BB%91%E7%BE%A4%E6%99%96/" style="font-size: 1.1em; color: #999">黑群晖</a> <a href="../tags/esxi/" style="font-size: 1.2em; color: #999da3">esxi</a> <a href="../tags/vps/" style="font-size: 1.1em; color: #999">vps</a> <a href="../tags/privoxy/" style="font-size: 1.1em; color: #999">privoxy</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      <a class="card-more-btn" href="../archives/"
+            title="查看更多">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="../archives/2023/09/">
+            <span class="card-archive-list-date">
+              九月 2023
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="../archives/2023/08/">
+            <span class="card-archive-list-date">
+              八月 2023
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="../archives/2023/07/">
+            <span class="card-archive-list-date">
+              七月 2023
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="../archives/2023/05/">
+            <span class="card-archive-list-date">
+              五月 2023
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="../archives/2023/01/">
+            <span class="card-archive-list-date">
+              一月 2023
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="../archives/2022/12/">
+            <span class="card-archive-list-date">
+              十二月 2022
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="../archives/2022/11/">
+            <span class="card-archive-list-date">
+              十一月 2022
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="../archives/2022/10/">
+            <span class="card-archive-list-date">
+              十月 2022
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">28</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">11.3k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-02-18T05:42:17.478Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By Maktub_小明</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="../../js/utils.js"></script><script src="../../js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="../js/search/local-search.js"></script></div></div></body></html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>树莓派 ALL in ONE | Maktub_Blog</title><meta name="author" content="Maktub_小明"><meta name="copyright" content="Maktub_小明"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="更新 本文已经停止维护，请跳转最新地址  Maktub_Wiki&#x2F;服务搭建 环境 Raspberry Pi OS Lite  配置开机自启动 auto.sh文件  1234567891011121314151617181920#开启混杂模式ip link set eth0 promisc on#docker macvlan互通ip link add macvlan_br link eth">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树莓派 ALL in ONE">
+<meta property="og:url" content="https://blog.maktub.cn/pages/9d07025b/index.html">
+<meta property="og:site_name" content="Maktub_Blog">
+<meta property="og:description" content="更新 本文已经停止维护，请跳转最新地址  Maktub_Wiki&#x2F;服务搭建 环境 Raspberry Pi OS Lite  配置开机自启动 auto.sh文件  1234567891011121314151617181920#开启混杂模式ip link set eth0 promisc on#docker macvlan互通ip link add macvlan_br link eth">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bing.img.run/rand_1366x768.php?random=1">
+<meta property="article:published_time" content="2022-10-30T10:49:39.000Z">
+<meta property="article:modified_time" content="2023-11-10T03:34:12.000Z">
+<meta property="article:author" content="Maktub_小明">
+<meta property="article:tag" content="树莓派">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bing.img.run/rand_1366x768.php?random=1"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "树莓派 ALL in ONE",
+  "url": "https://blog.maktub.cn/pages/9d07025b/",
+  "image": "https://bing.img.run/rand_1366x768.php?random=1",
+  "datePublished": "2022-10-30T10:49:39.000Z",
+  "dateModified": "2023-11-10T03:34:12.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Maktub_小明",
+      "url": "https://blog.maktub.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="../../uploads/avatar.jpg"><link rel="canonical" href="https://blog.maktub.cn/pages/9d07025b/index.html"><link rel="preconnect"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="../../css/index.css"><link rel="stylesheet" href="../../pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-ZKKH7RF2CP"></script><script>window.dataLayer = window.dataLayer || []
+function gtag(){dataLayer.push(arguments)}
+gtag('js', new Date())
+gtag('config', 'G-ZKKH7RF2CP')
+btf.addGlobalFn('pjaxComplete', () => {
+  gtag('config', 'G-ZKKH7RF2CP', {'page_path': window.location.pathname})
+}, 'google_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: '../pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '树莓派 ALL in ONE',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/uploads/butterfly/width.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="../uploads/avatar.jpg" onerror="this.onerror=null;this.src='../img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="../archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="../tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="../index.html"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="../archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="../tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="../categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="../about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="../../index.html"><img class="site-icon" src="../../uploads/avatar.jpg" alt="Logo"><span class="site-name">Maktub_Blog</span></a><a class="nav-page-title" href="../../index.html"><span class="site-name">树莓派 ALL in ONE</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="../index.html"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="../archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="../tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="../categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="../about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">树莓派 ALL in ONE</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-10-30T10:49:39.000Z" title="发表于 2022-10-30 18:49:39">2022-10-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-11-10T03:34:12.000Z" title="更新于 2023-11-10 11:34:12">2023-11-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="../../categories/%E8%BD%AF%E8%B7%AF%E7%94%B1/">软路由</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><blockquote>
+<p>本文已经停止维护，请跳转最新地址</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://wiki.maktub.cn/pages/fba71e/">Maktub_Wiki&#x2F;服务搭建</a></p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Raspberry Pi OS Lite</li>
+</ul>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="开机自启动"><a href="#开机自启动" class="headerlink" title="开机自启动"></a>开机自启动</h3><ul>
+<li><code>auto.sh</code>文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#开启混杂模式</span><br><span class="line">ip link set eth0 promisc on</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#docker macvlan互通</span><br><span class="line">ip link add macvlan_br link eth0 type macvlan mode bridge</span><br><span class="line">ip addr add 192.168.3.5 dev macvlan_br</span><br><span class="line">ip link set macvlan_br up</span><br><span class="line">ip link set macvlan_br promisc on</span><br><span class="line">ip route add 192.168.3.9 dev macvlan_br</span><br><span class="line"></span><br><span class="line">#zerotier转发</span><br><span class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">iptables -A FORWARD -i eth0 -o ztr2qvners -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">iptables -A FORWARD -i ztr2qvners -o eth0 -j ACCEPT</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING -o macvlan_br -j MASQUERADE</span><br><span class="line">iptables -A FORWARD -i macvlan_br -o ztr2qvners -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">iptables -A FORWARD -i ztr2qvners -o macvlan_br -j ACCEPT</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编辑 <code>/etc/rc.local</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh -e</span><br><span class="line">#</span><br><span class="line"># rc.local</span><br><span class="line">#</span><br><span class="line"># This script is executed at the end of each multiuser runlevel.</span><br><span class="line"># Make sure that the script will &quot;exit 0&quot; on success or any other</span><br><span class="line"># value on error.</span><br><span class="line">#</span><br><span class="line"># In order to enable or disable this script just change the execution</span><br><span class="line"># bits.</span><br><span class="line">#</span><br><span class="line"># By default this script does nothing.</span><br><span class="line"></span><br><span class="line"># Print the IP address</span><br><span class="line">_IP=$(hostname -I) || true</span><br><span class="line">if [ &quot;$_IP&quot; ]; then</span><br><span class="line">  printf &quot;My IP address is %s\n&quot; &quot;$_IP&quot;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">#挂载硬盘</span><br><span class="line">mount -t ext4 /dev/sda1 /mnt/disk</span><br><span class="line"></span><br><span class="line"># 延迟启动</span><br><span class="line">(</span><br><span class="line">sleep 30</span><br><span class="line">/bin/bash /root/.auto/auto.sh</span><br><span class="line">) &amp;</span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>解决树莓派断开网络连接后，路由消失,为树莓派添加静态路由<br>编辑文件<code>/lib/dhcpcd/dhcpcd-hooks/40-route</code></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip route add 192.168.3.9 dev macvlan_br</span><br></pre></td></tr></table></figure>
+
+<h3 id="docker管理工具"><a href="#docker管理工具" class="headerlink" title="docker管理工具"></a>docker管理工具</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/jesseduffield/lazydocker</span><br><span class="line"></span><br><span class="line">#快捷命令</span><br><span class="line">alias lazydocker=&#x27;/root/.tool/lazydocker&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="wireguard管理工具"><a href="#wireguard管理工具" class="headerlink" title="wireguard管理工具"></a>wireguard管理工具</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/ngoduykhanh/wireguard-ui</span><br></pre></td></tr></table></figure>
+
+<h3 id="flare标签页管理"><a href="#flare标签页管理" class="headerlink" title="flare标签页管理"></a>flare标签页管理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name flare --restart=always  -p 5005:5005 -v /mnt/disk/docker/flare:/app soulteary/flare</span><br></pre></td></tr></table></figure>
+
+<h3 id="zerotier异地组网"><a href="#zerotier异地组网" class="headerlink" title="zerotier异地组网"></a>zerotier异地组网</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name zerotier --restart=always --device=/dev/net/tun --net=host --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v /mnt/disk/docker/zerotier-one:/var/lib/zerotier-one  -v /etc/gai.conf:/etc/gai.conf zerotier/zerotier:latest</span><br><span class="line"></span><br><span class="line"># 开启转发</span><br><span class="line">cho &quot;net.ipv4.ip_forward = 1&quot; &gt;&gt; /etc/sysctl.conf </span><br><span class="line">sysctl -p</span><br><span class="line"></span><br><span class="line"># 配置防火墙</span><br><span class="line">ip link set eth0 promisc on</span><br><span class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">iptables -A FORWARD -i eth0 -o ztr2qvners -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">iptables -A FORWARD -i ztr2qvners -o eth0 -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<h3 id="plex影音库"><a href="#plex影音库" class="headerlink" title="plex影音库"></a>plex影音库</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line">  plex:</span><br><span class="line">    image: plexinc/pms-docker</span><br><span class="line">    restart: always</span><br><span class="line">    network_mode: host</span><br><span class="line">    hostname: moviepilot    </span><br><span class="line">    volumes:   </span><br><span class="line">      - ./config:/config</span><br><span class="line">      - ./transcode:/transcode</span><br><span class="line">      - /mnt/down/download/Plex:/data</span><br><span class="line">    environment: </span><br><span class="line">      - UMASK=000</span><br></pre></td></tr></table></figure>
+
+<h3 id="music-tag-web音乐信息修改"><a href="#music-tag-web音乐信息修改" class="headerlink" title="music_tag_web音乐信息修改"></a>music_tag_web音乐信息修改</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name music_tag  -p 8001:8001 -v /mnt/down/Plex/Music:/app/media -v /mnt/disk/docker/music_tag_web:/app/data --restart=always xhongc/music_tag_web:latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="filebrowser文件管理"><a href="#filebrowser文件管理" class="headerlink" title="filebrowser文件管理"></a>filebrowser文件管理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name filebrowser --restart=always  -v /mnt:/srv  -v /mnt/disk/docker/filebrowser/filebrowser.db:/database.db  -u $(id -u):$(id -g)  -p 8082:80  filebrowser/filebrowser</span><br></pre></td></tr></table></figure>
+<h3 id="迅雷离线下载工具"><a href="#迅雷离线下载工具" class="headerlink" title="迅雷离线下载工具"></a>迅雷离线下载工具</h3><blockquote>
+<p>邀请码 <code>我不是矿神IMNKS</code></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name=xunlei --hostname=mynas --net=host -v /mnt/disk/docker/xunlei:/xunlei/data -v /mnt/down/xunleidownloads:/xunlei/downloads --restart=unless-stopped --privileged cnk3x/xunlei:latest</span><br></pre></td></tr></table></figure>
+<h3 id="qbittorrent-下载工具"><a href="#qbittorrent-下载工具" class="headerlink" title="qbittorrent 下载工具"></a>qbittorrent 下载工具</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d  --name=qbittorrent --network=host  -e PUID=1000  -e PGID=1000   -e WEBUI_PORT=8081 -v /mnt/disk/docker/qbittorrent/config:/config  -v /mnt/disk/download:/downloads  --restart unless-stopped linuxserver/qbittorrent</span><br></pre></td></tr></table></figure>
+
+<h3 id="home-assistants智能家居中心"><a href="#home-assistants智能家居中心" class="headerlink" title="home-assistants智能家居中心"></a>home-assistants智能家居中心</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name home-assistants --restart=always -v /mnt/disk/docker/hassio:/config --network=host homeassistant/home-assistant</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="smb共享"><a href="#smb共享" class="headerlink" title="smb共享"></a>smb共享</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim  /etc/samba/smb.conf</span><br><span class="line">[smb]</span><br><span class="line">path = /mnt/disk</span><br><span class="line">writeable=Yes</span><br><span class="line">create mask=0777</span><br><span class="line">directory mask=0777</span><br><span class="line">public=yes</span><br><span class="line">browseable=yes</span><br><span class="line">valid users = root</span><br><span class="line">guest ok = no</span><br></pre></td></tr></table></figure>
+
+<h3 id="alist-网盘挂载"><a href="#alist-网盘挂载" class="headerlink" title="alist 网盘挂载"></a>alist 网盘挂载</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --restart=always -v /mnt/disk/docker/alist:/opt/alist/data -v /mnt/down/alistdown/:/download  -p 5244:5244 --name=&quot;alist&quot; xhofe/alist:latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="moviepilot-媒体搜索"><a href="#moviepilot-媒体搜索" class="headerlink" title="moviepilot 媒体搜索"></a>moviepilot 媒体搜索</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line">  moviepilot:</span><br><span class="line">    image: jxxghp/moviepilot:latest</span><br><span class="line">    ports:</span><br><span class="line">        - 3000:3000 # web 接口</span><br><span class="line">    restart: always</span><br><span class="line">    network_mode: bridge</span><br><span class="line">    hostname: moviepilot    </span><br><span class="line">    volumes:   </span><br><span class="line">      - ./moviepilot:/moviepilot #程序主目录，必选</span><br><span class="line">      - ./config:/config #config 配置文件，必选</span><br><span class="line">      - /mnt/down/download:/downloads</span><br><span class="line">    environment: </span><br><span class="line"># 基础设置</span><br><span class="line">      - UMASK=000</span><br><span class="line">      - SUPERUSER=xxxxxx   #登录账号</span><br><span class="line">      - TMDB_API_DOMAIN=api.tmdb.org</span><br><span class="line"># 下载目录设置</span><br><span class="line">      - DOWNLOAD_PATH=/downloads/moviepilot   # 下载保存目录</span><br><span class="line">      - DOWNLOAD_MOVIE_PATH=/downloads/moviepilot/Movie</span><br><span class="line">      - DOWNLOAD_TV_PATH=/downloads/moviepilot/TVShow</span><br><span class="line">      - DOWNLOAD_ANIME_PATH=/downloads/moviepilot/Anime</span><br><span class="line">      - DOWNLOAD_CATEGORY=false #下载二级分类开关</span><br><span class="line"># 媒体库功能设置     </span><br><span class="line">      - TRANSFER_TYPE=link      #转移方式，支持link/copy/move/softlink  </span><br><span class="line">      - LIBRARY_PATH=/downloads/Plex</span><br><span class="line">      - LIBRARY_MOVIE_NAME=Movie</span><br><span class="line">      - LIBRARY_TV_NAME=TVShow</span><br><span class="line">      - LIBRARY_ANIME_NAME=Anime</span><br><span class="line">      - LIBRARY_CATEGORY=false</span><br><span class="line">      - SCRAP_METADATA=false</span><br><span class="line"># 下载器设置</span><br><span class="line">     ##qbittorrent设置项</span><br><span class="line">      - DOWNLOADER=qbittorrent</span><br><span class="line">      - QB_HOST=http://xxxxxx:xxxxx # qbittorrent地址</span><br><span class="line">      - QB_USER=xxxxxxx</span><br><span class="line">      - QB_PASSWORD=xxxxxxx</span><br><span class="line"># 媒体服务器</span><br><span class="line">      - MEDIASERVER=plex   </span><br><span class="line">      - PLEX_HOST=http://xxxx:xxxxx</span><br><span class="line">      - PLEX_TOKEN=xxxxxxxx</span><br><span class="line">      - MEDIASERVER_SYNC_BLACKLIST:音乐</span><br><span class="line">      </span><br><span class="line">      - BIG_MEMORY_MODE=true</span><br><span class="line"># 用户认证</span><br><span class="line">      - AUTH_SITE=wintersakura  #认证站点</span><br><span class="line">      - WINTERSAKURA_UID=xxxxxxx # 观众 ID </span><br><span class="line">      - WINTERSAKURA_PASSKEY=xxxxxxxx # 观众 passkey</span><br><span class="line"></span><br><span class="line">      - COOKIECLOUD_INTERVAL=10000000</span><br></pre></td></tr></table></figure>
+
+<h3 id="calibre-web-图书管理"><a href="#calibre-web-图书管理" class="headerlink" title="calibre-web 图书管理"></a>calibre-web 图书管理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name=calibre-web \</span><br><span class="line">  -e PUID=0 \</span><br><span class="line">  -e PGID=0 \</span><br><span class="line">  -e TZ=Asia/Chongqing \</span><br><span class="line">  -p 8083:8083 \</span><br><span class="line">  -v /mnt/disk/docker/calibre/config:/config \</span><br><span class="line">  -v /mnt/disk/docker/calibre/books:/books \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  linuxserver/calibre-web:latest</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="已经废弃，不使用"><a href="#已经废弃，不使用" class="headerlink" title="已经废弃，不使用"></a>已经废弃，不使用</h2><h3 id="nas-tools-媒体搜索"><a href="#nas-tools-媒体搜索" class="headerlink" title="nas-tools 媒体搜索"></a>nas-tools 媒体搜索</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name nas-tools --restart=always --hostname nas-tools -p 3000:3000 -v /mnt/disk/docker/nastools/config:/config --network host  -v /mnt/down:/disk  -e PUID=1000 -e PGID=1000 -e UMASK=000 -e NASTOOL_AUTO_UPDATE=false nastool/nas-tools</span><br></pre></td></tr></table></figure>
+
+<h3 id="openwrt"><a href="#openwrt" class="headerlink" title="openwrt"></a>openwrt</h3><ul>
+<li>创建虚拟网络</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ip link set eth0 promisc on</span><br><span class="line">docker network create -d macvlan --subnet=192.168.3.1/24 --gateway=192.168.3.8 -o parent=eth0 macnet</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置防火墙</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ip link set eth0 promisc on</span><br><span class="line"># docker value</span><br><span class="line">ip link add link eth0 brnet type macvlan mode bridge</span><br><span class="line">ip link set dev brnet up</span><br><span class="line">//192.168.3.9 容器ip</span><br><span class="line">ip route add 192.168.3.9 dev brnet</span><br></pre></td></tr></table></figure>
+<ul>
+<li>导入镜像</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker import https://downloads.openwrt.org/releases/22.03.2/targets/armvirt/64/openwrt-22.03.2-armvirt-64-default-rootfs.tar.gz openwrt-22.03.2</span><br><span class="line"># 或</span><br><span class="line">docker pull openwrtorg/rootfs:armvirt-64-22.03.2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建容器</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --restart always --name openwrt -d --network macnet --privileged openwrtorg/rootfs:armvirt-64-22.03.2 /sbin/init</span><br></pre></td></tr></table></figure>
+
+<h3 id="V2rayA透明代理"><a href="#V2rayA透明代理" class="headerlink" title="V2rayA透明代理"></a>V2rayA透明代理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --restart=always --cpu-shares 3072 --privileged --network=macnet --ip 192.168.3.9 --name v2raya -e V2RAYA_LOG_FILE=/tmp/v2raya.log -v /lib/modules:/lib/modules:ro -v /etc/resolv.conf:/etc/resolv.conf -v /mnt/disk/docker/v2raya/config:/etc/v2raya mzz2017/v2raya</span><br></pre></td></tr></table></figure>
+
+<h3 id="clash透明代理"><a href="#clash透明代理" class="headerlink" title="clash透明代理"></a>clash透明代理</h3><ol>
+<li>安装</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d  --name clash  --restart unless-stopped --device=/dev/net/tun --log-opt max-size=1m  --network host --privileged  -v /mnt/disk/docker/clash:/root/.config/clash  dreamacro/clash-premium</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>配置文件</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">mixed-port: 7890</span><br><span class="line">socks-port: 7891</span><br><span class="line">redir-port: 7892</span><br><span class="line"># Transparent proxy server port for Linux (TProxy TCP and TProxy UDP)</span><br><span class="line">tproxy-port: 7893</span><br><span class="line">allow-lan: true</span><br><span class="line">mode: Rule</span><br><span class="line">log-level: info #info #debug</span><br><span class="line">external-ui: clash-dashboard</span><br><span class="line">external-controller: 0.0.0.0:9090</span><br><span class="line">secret: &quot;&quot;</span><br><span class="line">experimental:</span><br><span class="line">  ignore-resolve-fail: true # ignore dns reslove fail, default value is true</span><br><span class="line">dns:</span><br><span class="line">  enable: true</span><br><span class="line">  listen: 0.0.0.0:53</span><br><span class="line">  ipv6: false</span><br><span class="line">  enhanced-mode: redir-host #redir-host #fake-ip</span><br><span class="line">  fake-ip-range: 198.18.0.1/16</span><br><span class="line">  fake-ip-filter: # fake ip white domain list</span><br><span class="line">    - &#x27;*.lan&#x27;</span><br><span class="line">  nameserver:</span><br><span class="line">    - 114.114.114.114</span><br><span class="line">    - 8.8.8.8</span><br><span class="line">  fallback:</span><br><span class="line">    - 114.114.114.114</span><br><span class="line">    - 8.8.8.8</span><br><span class="line">interface-name: eth0</span><br><span class="line">auto-redir:</span><br><span class="line">  enable: true</span><br><span class="line">  auto-route: true</span><br><span class="line">tun:</span><br><span class="line">  enable: true</span><br><span class="line">  stack: system</span><br><span class="line">  dns-hijack:</span><br><span class="line">    - any:53</span><br><span class="line">    - tcp://any:53</span><br><span class="line">  auto-route: true</span><br><span class="line">#ebpf和zerotier和wirguard冲突</span><br><span class="line">#ebpf:</span><br><span class="line">    #redirect-to-tun:</span><br><span class="line">        #- eth0</span><br><span class="line">#直连端口</span><br><span class="line">rules:</span><br><span class="line">  - DST-PORT,9993,DIRECT</span><br><span class="line">  - SRC-PORT,9993,DIRECT</span><br><span class="line">  - DST-PORT,18721,DIRECT</span><br><span class="line">  - SRC-PORT,18721,DIRECT</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.maktub.cn">Maktub_小明</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.maktub.cn/pages/9d07025b/">https://blog.maktub.cn/pages/9d07025b/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.maktub.cn" target="_blank">Maktub_Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="../../tags/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a></div><div class="post-share"><div class="social-share" data-image="https://bing.img.run/rand_1366x768.php?random=1" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="../../pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="../../pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="../1e41147d/" title="拯救被墙ip-vmess+ws+tls套cf+cdn"><img class="cover" src="https://bing.img.run/rand_1366x768.php?random=9" onerror="onerror=null;src='../../img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">拯救被墙ip-vmess+ws+tls套cf+cdn</div></div><div class="info-2"><div class="info-item-1">一键安装脚本 V2Ray_ws-tls_bash_onekey  注册cloudflare 域名配置dns 控制面板DNS配置域名A解析 控制面板SSL/TLS设置为Full(strict)  免费域名注册 Freenom  遇到的问题 Git: Failed sending HTTP2 data solution  1sudo apt reinstall libcurl3-gnutls/buster  </div></div></div></a><a class="pagination-related" href="../ad20e89e/" title="PVE-OSX-KVM黑苹果"><img class="cover" src="https://bing.img.run/rand_1366x768.php?random=6" onerror="onerror=null;src='../../img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">PVE-OSX-KVM黑苹果</div></div><div class="info-2"><div class="info-item-1">环境 Proxmox 7  制作引导文件下载库1git clone https://github.com/kholia/OSX-KVM.git  下载并转换 OSX-KVM12345678#下载./fetch-macOS-v2.py#转换qemu-img convert BaseSystem.dmg -O raw BaseSystem.img#迁移mv BaseSystem.img /var/lib/vz/template/iso/  提取opencore /OSX-KVM/OpenCore12345#解压7z x OpenCore.qcow2#迁移mv primary.img /var/lib/vz/template/iso/  设置虚拟机(Intel)123456789101112131415161718192021args: -device isa-applesmc,osk=&quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot; -smbios type=2 -device u...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="../uploads/avatar.jpg" onerror="this.onerror=null;this.src='../img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Maktub_小明</div><div class="author-info-description"></div><div class="site-data"><a href="../archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="../tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://www.maktub.cn/"><i class="fab fa-github"></i><span>主站点</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0"><span class="toc-number">1.</span> <span class="toc-text">更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="toc-number">3.1.</span> <span class="toc-text">开机自启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="toc-number">3.2.</span> <span class="toc-text">docker管理工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wireguard%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="toc-number">3.3.</span> <span class="toc-text">wireguard管理工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flare%E6%A0%87%E7%AD%BE%E9%A1%B5%E7%AE%A1%E7%90%86"><span class="toc-number">3.4.</span> <span class="toc-text">flare标签页管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zerotier%E5%BC%82%E5%9C%B0%E7%BB%84%E7%BD%91"><span class="toc-number">3.5.</span> <span class="toc-text">zerotier异地组网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#plex%E5%BD%B1%E9%9F%B3%E5%BA%93"><span class="toc-number">3.6.</span> <span class="toc-text">plex影音库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#music-tag-web%E9%9F%B3%E4%B9%90%E4%BF%A1%E6%81%AF%E4%BF%AE%E6%94%B9"><span class="toc-number">3.7.</span> <span class="toc-text">music_tag_web音乐信息修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#filebrowser%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="toc-number">3.8.</span> <span class="toc-text">filebrowser文件管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%85%E9%9B%B7%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7"><span class="toc-number">3.9.</span> <span class="toc-text">迅雷离线下载工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#qbittorrent-%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7"><span class="toc-number">3.10.</span> <span class="toc-text">qbittorrent 下载工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#home-assistants%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85%E4%B8%AD%E5%BF%83"><span class="toc-number">3.11.</span> <span class="toc-text">home-assistants智能家居中心</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#smb%E5%85%B1%E4%BA%AB"><span class="toc-number">3.12.</span> <span class="toc-text">smb共享</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#alist-%E7%BD%91%E7%9B%98%E6%8C%82%E8%BD%BD"><span class="toc-number">3.13.</span> <span class="toc-text">alist 网盘挂载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#moviepilot-%E5%AA%92%E4%BD%93%E6%90%9C%E7%B4%A2"><span class="toc-number">3.14.</span> <span class="toc-text">moviepilot 媒体搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#calibre-web-%E5%9B%BE%E4%B9%A6%E7%AE%A1%E7%90%86"><span class="toc-number">3.15.</span> <span class="toc-text">calibre-web 图书管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%B2%E7%BB%8F%E5%BA%9F%E5%BC%83%EF%BC%8C%E4%B8%8D%E4%BD%BF%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">已经废弃，不使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#nas-tools-%E5%AA%92%E4%BD%93%E6%90%9C%E7%B4%A2"><span class="toc-number">4.1.</span> <span class="toc-text">nas-tools 媒体搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#openwrt"><span class="toc-number">4.2.</span> <span class="toc-text">openwrt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#V2rayA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86"><span class="toc-number">4.3.</span> <span class="toc-text">V2rayA透明代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#clash%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86"><span class="toc-number">4.4.</span> <span class="toc-text">clash透明代理</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="../pages/b082fa33/" title="iOS MapBox v10(四)HttpServiceInterface/HttpServiceInterceptorInterface拦截修改网络请求"><img src="https://bing.img.run/rand_1366x768.php?random=6" onerror="this.onerror=null;this.src='../img/404.jpg'" alt="iOS MapBox v10(四)HttpServiceInterface/HttpServiceInterceptorInterface拦截修改网络请求"/></a><div class="content"><a class="title" href="../pages/b082fa33/" title="iOS MapBox v10(四)HttpServiceInterface/HttpServiceInterceptorInterface拦截修改网络请求">iOS MapBox v10(四)HttpServiceInterface/HttpServiceInterceptorInterface拦截修改网络请求</a><time datetime="2023-09-02T07:49:15.000Z" title="发表于 2023-09-02 15:49:15">2023-09-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="../pages/256e231d/" title="iOS MapBox v10(三)iconOffset/iconTranslate/textOffset/textTranslate的区别"><img src="https://bing.img.run/rand_1366x768.php?random=8" onerror="this.onerror=null;this.src='../img/404.jpg'" alt="iOS MapBox v10(三)iconOffset/iconTranslate/textOffset/textTranslate的区别"/></a><div class="content"><a class="title" href="../pages/256e231d/" title="iOS MapBox v10(三)iconOffset/iconTranslate/textOffset/textTranslate的区别">iOS MapBox v10(三)iconOffset/iconTranslate/textOffset/textTranslate的区别</a><time datetime="2023-08-12T07:05:36.000Z" title="发表于 2023-08-12 15:05:36">2023-08-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="../pages/5f5a1e84/" title="iOS MapBox v10(二)修改矢量图形的几种方法"><img src="https://bing.img.run/rand_1366x768.php?random=4" onerror="this.onerror=null;this.src='../img/404.jpg'" alt="iOS MapBox v10(二)修改矢量图形的几种方法"/></a><div class="content"><a class="title" href="../pages/5f5a1e84/" title="iOS MapBox v10(二)修改矢量图形的几种方法">iOS MapBox v10(二)修改矢量图形的几种方法</a><time datetime="2023-08-05T03:09:55.000Z" title="发表于 2023-08-05 11:09:55">2023-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="../pages/236c4326/" title="iOS MapBox v10(一) 本地化/无网使用"><img src="https://bing.img.run/rand_1366x768.php?random=3" onerror="this.onerror=null;this.src='../img/404.jpg'" alt="iOS MapBox v10(一) 本地化/无网使用"/></a><div class="content"><a class="title" href="../pages/236c4326/" title="iOS MapBox v10(一) 本地化/无网使用">iOS MapBox v10(一) 本地化/无网使用</a><time datetime="2023-07-30T04:41:40.000Z" title="发表于 2023-07-30 12:41:40">2023-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="../pages/4e72e020/" title="Nat-VPS动态IP搭建Zerotier-Moon"><img src="https://bing.img.run/rand_1366x768.php?random=7" onerror="this.onerror=null;this.src='../img/404.jpg'" alt="Nat-VPS动态IP搭建Zerotier-Moon"/></a><div class="content"><a class="title" href="../pages/4e72e020/" title="Nat-VPS动态IP搭建Zerotier-Moon">Nat-VPS动态IP搭建Zerotier-Moon</a><time datetime="2023-07-08T15:03:00.000Z" title="发表于 2023-07-08 23:03:00">2023-07-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By Maktub_小明</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="../../js/utils.js"></script><script src="../../js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="../js/search/local-search.js"></script></div></div></body></html>
